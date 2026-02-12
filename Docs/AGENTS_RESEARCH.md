@@ -80,14 +80,16 @@ AGENTS.md reduce alucinaciones porque transforma esas suposiciones en un contrat
 ```mermaid
 flowchart TB
   U[Usuario: petición] --> A[Agente]
-  R[Reglas persistentes\nAGENTS.md / rules / instructions] --> A
-  C[Contexto del workspace\narchivos abiertos, diff, estructura] --> A
-  S[Recuperación dinámica\nbúsqueda semántica / RAG] --> A
-  T[Herramientas\nterminal, tests, búsqueda web, etc.] --> A
-  A --> P[Prompt compuesto\n(system/developer) + contexto + user]
+  R["Reglas persistentes\nAGENTS.md / rules / instructions"] --> A
+  C["Contexto del workspace\narchivos abiertos, diff, estructura"] --> A
+  S["Recuperación dinámica\nbúsqueda semántica / RAG"] --> A
+  T["Herramientas\nterminal, tests, búsqueda web, etc."] --> A
+  
+  A --> P["Prompt compuesto\n(system/developer) + contexto + user"]
+  
   P --> M[LLM]
   M --> D[Propuesta/edición]
-  D --> V[Verificación\nlint/tests/build]
+  D --> V["Verificación\nlint/tests/build"]
   V --> A
 ```
 
