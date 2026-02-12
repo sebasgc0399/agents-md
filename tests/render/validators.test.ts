@@ -2,6 +2,24 @@ import { describe, it, expect } from 'vitest';
 import { validateOutput } from '../../src/render/validators.js';
 
 describe('validateOutput', () => {
+  it('counts lines without trailing newline off-by-one', () => {
+    const result = validateOutput('a\nb\n');
+
+    expect(result.lineCount).toBe(2);
+  });
+
+  it('counts single line with trailing newline as one line', () => {
+    const result = validateOutput('a\n');
+
+    expect(result.lineCount).toBe(1);
+  });
+
+  it('counts line with multiple trailing newlines consistently', () => {
+    const result = validateOutput('a\n\n\n');
+
+    expect(result.lineCount).toBe(1);
+  });
+
   it('keeps valid=true when only soft-limit warnings exist', () => {
     const result = validateOutput('# AGENTS');
 
@@ -62,5 +80,34 @@ describe('validateOutput', () => {
     ].join('\n'));
 
     expect(result.warnings).toContain('Section "## First section" appears to be empty');
+  });
+
+  it('warns when a section body only contains html comments and blank lines', () => {
+    const result = validateOutput([
+      '# AGENTS',
+      '## X',
+      '<!-- comment -->',
+      '<!-- another -->',
+      '',
+      '## Y',
+      'text',
+    ].join('\n'));
+
+    expect(result.warnings).toContain('Section "## X" appears to be empty');
+  });
+
+  it('does not warn when section body has real text after html comment lines', () => {
+    const result = validateOutput([
+      '# AGENTS',
+      '## X',
+      '<!-- comment -->',
+      'Text here',
+      '## Y',
+      'text',
+    ].join('\n'));
+
+    expect(
+      result.warnings.some(w => w === 'Section "## X" appears to be empty')
+    ).toBe(false);
   });
 });

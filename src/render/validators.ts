@@ -37,7 +37,8 @@ export function validateOutput(
   profile: Profile = 'compact'
 ): ValidationResult {
   const normalized = content.replace(/\r\n/g, '\n');
-  const lines = normalized.split('\n');
+  const normalizedForCount = normalized.replace(/\n+$/g, '');
+  const lines = normalizedForCount.length ? normalizedForCount.split('\n') : [''];
   const lineCount = lines.length;
   const estimatedTokens = estimateTokens(normalized);
   const limits = PROFILE_LIMITS[profile];
@@ -104,11 +105,18 @@ export function validateOutput(
     const start = headingIndex;
     const end = headings[i + 1]?.index ?? normalized.length;
     const sectionBody = normalized.slice(start + headingLine.length, end);
-    const hasNonEmptyLine = sectionBody
-      .split('\n')
-      .some(line => line.trim().length > 0);
+    const hasMeaningfulLine = sectionBody.split('\n').some(line => {
+      const trimmed = line.trim();
+      if (trimmed === '') {
+        return false;
+      }
+      if (/^<!--.*-->$/.test(trimmed)) {
+        return false;
+      }
+      return true;
+    });
 
-    if (!hasNonEmptyLine) {
+    if (!hasMeaningfulLine) {
       warnings.push(`Section "${headingLine.trim()}" appears to be empty`);
     }
   }
