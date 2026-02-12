@@ -2,7 +2,7 @@
  * Main rendering module
  */
 
-import { DetectionResult, GenerationResult } from '../types.js';
+import { DetectionResult, GenerationResult, Profile } from '../types.js';
 import { buildTemplateContext } from './data-builder.js';
 import { renderTemplate, selectTemplate } from './mustache-renderer.js';
 import { validateOutput } from './validators.js';
@@ -10,9 +10,12 @@ import { validateOutput } from './validators.js';
 /**
  * Render AGENTS.md from detection result
  */
-export function renderAgentsMd(detection: DetectionResult): GenerationResult {
+export function renderAgentsMd(
+  detection: DetectionResult,
+  profile: Profile = 'compact'
+): GenerationResult {
   // Build template context
-  const context = buildTemplateContext(detection);
+  const context = buildTemplateContext(detection, profile);
 
   // Select appropriate template
   const templateName = selectTemplate(context);
@@ -21,7 +24,7 @@ export function renderAgentsMd(detection: DetectionResult): GenerationResult {
   const content = renderTemplate(templateName, context);
 
   // Validate output
-  const validation = validateOutput(content);
+  const validation = validateOutput(content, profile);
 
   return {
     content,

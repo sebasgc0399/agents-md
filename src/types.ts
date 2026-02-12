@@ -10,6 +10,7 @@ export interface CLIOptions {
   interactive: boolean;
   template?: string;
   verbose: boolean;
+  profile: Profile;
 }
 
 export interface PackageInfo {
@@ -57,6 +58,7 @@ export interface FrameworkInfo {
 
 export type RuntimeType = 'node' | 'bun' | 'unknown';
 export type PackageManager = 'npm' | 'yarn' | 'pnpm' | 'bun' | 'unknown';
+export type Profile = 'compact' | 'standard' | 'full';
 
 export interface RuntimeInfo {
   type: RuntimeType;
@@ -85,6 +87,7 @@ export interface DetectionResult {
 export interface TemplateContext {
   project_name: string;
   project_description: string;
+  profile: Profile;
   stacks: string[];
   commands: {
     install: string;
@@ -103,6 +106,10 @@ export interface TemplateContext {
   has_format: boolean;
   has_build: boolean;
   is_monorepo: boolean;
+  isCompact: boolean;
+  isStandard: boolean;
+  isFull: boolean;
+  isStandardOrFull: boolean;
   framework_type: string;
   runtime_type: string;
 }

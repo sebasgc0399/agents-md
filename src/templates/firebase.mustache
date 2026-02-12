@@ -60,6 +60,164 @@ Antes de considerar una tarea completa:
 - Mocking de Firebase Admin SDK cuando sea necesario
 {{/has_tests}}
 
+{{#isStandardOrFull}}
+## How to work with AI agents
+
+### Task format
+- Define objective, scope, and expected output up front.
+- Include affected Firebase resources (Functions, Firestore, Storage).
+- Keep changes minimal and deterministic.
+- Request explicit validation steps before closing the task.
+
+### Requesting diffs and validation
+- Ask for changed files and reason per file.
+- Ask for command log used for local validation.
+- Ask for test/emulator results with pass/fail summary.
+- Ask for security impact notes when touching auth or data paths.
+
+### Firebase delivery checklist
+- Confirm function triggers are correct and intentional.
+- Confirm retries/idempotency assumptions are explicit.
+- Confirm timeouts and resource usage are reasonable.
+- Confirm no secrets are embedded in source code.
+
+## Expanded Definition of Done
+- [ ] Scope complete with no unrelated refactors.
+- [ ] Emulator checks or equivalent local validation completed.
+- [ ] No placeholder values in generated markdown.
+- [ ] Docs and runbooks updated for behavior changes.
+- [ ] Backward compatibility confirmed for existing callers.
+
+## Debug checklist
+- Reproduce with emulator or deterministic fixture.
+- Verify environment variables and Firebase config source.
+- Check command detection and generated command section.
+- Validate output size and required sections by profile.
+- Re-run focused tests before full suite.
+
+## Testing strategy
+- Unit test pure business logic outside Firebase SDK wrappers.
+- Use emulator-backed integration tests for boundary behavior.
+- Keep assertions stable and deterministic.
+{{#has_tests}}
+- Keep command references aligned with `{{commands.test}}`.
+{{/has_tests}}
+
+## Do / Don't
+### Do
+- Do validate input and auth context on every entry point.
+- Do keep function side effects explicit.
+- Do document deploy and rollback expectations.
+- Do preserve default compact behavior.
+
+### Don't
+- Don't hardcode project ids, keys, or secrets.
+- Don't rely on implicit global state across invocations.
+- Don't skip validation on background triggers.
+- Don't bundle unrelated changes in one patch.
+
+## Agent handoff template
+### Required fields
+- Goal: one sentence describing expected final state.
+- Scope: exact files or folders that can change.
+- Constraints: what must not change.
+- Validation: commands that prove the change.
+- Risks: known uncertainty or follow-up items.
+
+### Status update format
+- Completed: concrete items done.
+- In progress: current active step.
+- Next: immediate next action.
+- Blockers: missing info or external dependency.
+
+### Review checklist
+- [ ] File-level diff is easy to follow.
+- [ ] Tests cover changed behavior.
+- [ ] Output remains deterministic.
+- [ ] No hidden behavior changes.
+- [ ] Error handling is explicit.
+- [ ] Documentation reflects new behavior.
+
+### Escalation rules
+- Escalate when requirements conflict.
+- Escalate before adding dependencies.
+- Escalate before touching unrelated modules.
+- Escalate on ambiguous security implications.
+{{/isStandardOrFull}}
+
+{{#isFull}}
+## Advanced agent protocol
+
+### Risk classification
+- Low: docs/template copy adjustments.
+- Medium: profile-dependent rendering and validation limits.
+- High: CLI parsing, deploy commands, and filesystem writes.
+- Medium/high changes require targeted regression tests.
+
+### PR handoff checklist
+- Provide before/after output for each affected profile.
+- Provide exact verification commands and outcomes.
+- Provide compatibility notes for existing workflows.
+- Provide residual risk and rollback guidance.
+
+### Failure triage flow
+1. Reproduce with fixture and explicit `--profile` flag.
+2. Isolate whether failure is detect/render/validate.
+3. Verify generated markdown includes required command set.
+4. Patch minimally and add regression coverage.
+
+### CI hardening notes
+- Keep tests OS-neutral for paths and execution.
+- Use non-shell process invocation in e2e tests.
+- Avoid timing-dependent assertions.
+- Keep fixtures small and deterministic.
+
+### Verification matrix
+| Layer | Check | Evidence |
+|---|---|---|
+| CLI | Arg parsing | command output |
+| Detection | scripts/framework | fixture result |
+| Rendering | profile sections | markdown preview |
+| Validation | limits/placeholders | unit tests |
+| E2E | dry-run command | test pass |
+
+### Rollback playbook
+1. Revert profile-specific template blocks first.
+2. Keep parser support only if backward compatible.
+3. Re-run compact profile tests and e2e.
+4. Re-introduce changes in smaller slices.
+
+### Communication protocol
+- Summarize assumptions before coding.
+- Report changed files immediately after edit step.
+- Report executed commands and outcomes.
+- Report unresolved risks before handoff.
+
+### Post-merge audit
+- Verify README examples still run as documented.
+- Verify SPEC and behavior remain aligned.
+- Verify CI pass on at least one Windows runner.
+- Verify default compact output remains unchanged.
+- Verify standard/full remain within configured limits.
+
+### Minimal failure report template
+- Command: exact failing command
+- Expected: what should happen
+- Actual: what happened
+- Suspected layer: detect/render/validate/cli
+- Reproduction fixture: path used
+
+### Final release gate
+- Confirm profile-specific limits pass validator.
+- Confirm placeholder checks remain strict.
+- Confirm default compact output is unchanged.
+- Confirm docs match implemented flags.
+- Confirm test suite is green in CI mode.
+- Confirm no unrelated files changed.
+- Confirm generated markdown still starts with # AGENTS.
+- Confirm profile ordering full > standard > compact.
+{{/isFull}}
+
 ## Seguridad
 {{security_notes}}
 

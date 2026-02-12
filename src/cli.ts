@@ -9,10 +9,12 @@ import fs from 'fs';
 import path from 'path';
 import { detectProject } from './detect/index.js';
 import { renderAgentsMd } from './render/index.js';
+import { Profile } from './types.js';
 import { Logger } from './utils/logger.js';
 import { directoryExists, isPathSafe } from './utils/fs-utils.js';
 
 const program = new Command();
+const VALID_PROFILES: Profile[] = ['compact', 'standard', 'full'];
 
 program
   .name('agents-md')
@@ -28,11 +30,20 @@ program
   .option('--dry-run', 'Preview without writing', false)
   .option('-y, --yes', 'Skip confirmations', false)
   .option('-i, --interactive', 'Interactive mode', false)
+  .option('--profile <profile>', 'Output profile: compact|standard|full', 'compact')
   .option('--verbose', 'Verbose output', false)
   .action(async (projectPath: string, options) => {
     const logger = new Logger(options.verbose);
 
     try {
+      const profile = String(options.profile || 'compact') as Profile;
+      if (!VALID_PROFILES.includes(profile)) {
+        logger.error(
+          `Invalid profile "${profile}". Valid values: ${VALID_PROFILES.join(', ')}`
+        );
+        process.exit(1);
+      }
+
       // Validate project path
       if (!directoryExists(projectPath)) {
         logger.error(`Directory not found: ${projectPath}`);
@@ -79,7 +90,8 @@ program
 
       // Render AGENTS.md
       logger.verbose('Rendering template...');
-      const result = renderAgentsMd(detection);
+      logger.verbose(`Profile: ${profile}`);
+      const result = renderAgentsMd(detection, profile);
 
       logger.verbose('Validating output...');
       logger.verbose(`  - Lines: ${result.validation.lineCount}`);

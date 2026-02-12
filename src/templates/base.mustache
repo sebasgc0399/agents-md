@@ -45,6 +45,169 @@ Antes de considerar una tarea completa:
 {{testing_notes}}
 {{/has_tests}}
 
+{{#isStandardOrFull}}
+## How to work with AI agents
+
+### Task format
+- Start with a clear goal in one sentence.
+- State exact files that can be changed.
+- Include constraints (no new deps, no feature creep, deterministic output).
+- Define explicit acceptance criteria before implementation starts.
+
+### Requesting diffs and verification
+- Ask for a file-by-file change summary with reasons.
+- Request exact commands executed for validation.
+- Ask for test output summary (passed/failed and counts).
+- Require explicit mention of known risks or follow-up tasks.
+
+### Execution protocol
+1. Inspect relevant files first and summarize findings.
+2. Propose the smallest safe change.
+3. Implement incrementally and run tests after each meaningful step.
+4. Report what changed, what was validated, and what remains.
+
+## Expanded Definition of Done
+- [ ] Scope is fully implemented with no unrelated changes.
+- [ ] Output remains deterministic for same inputs.
+- [ ] No placeholders leak into generated markdown.
+- [ ] Error paths fail with clear messages.
+- [ ] Documentation and tests are updated when behavior changes.
+
+## Debug checklist
+- Reproduce with one deterministic command.
+- Capture expected vs actual behavior.
+- Confirm environment assumptions (Node version, package manager, cwd).
+- Check module resolution and path normalization first.
+- Validate generated content length and formatting.
+- Re-run minimal targeted tests before full suite.
+
+## Testing strategy
+- Prefer fast deterministic tests over broad flaky integration tests.
+- Keep fixtures small and representative.
+- Assert on stable output fragments, not volatile wording.
+{{#has_tests}}
+- Verify canonical test command: `{{commands.test}}`.
+- Add regression tests for every bug fix in rendering or detection.
+{{/has_tests}}
+{{^has_tests}}
+- If no test script exists, document manual verification steps.
+{{/has_tests}}
+
+## Do / Don't
+### Do
+- Do preserve existing behavior unless a change is requested.
+- Do keep commits minimal and reviewable.
+- Do fail fast on invalid user input.
+- Do prefer explicit conditions over hidden heuristics.
+
+### Don't
+- Don't invent commands that do not exist in package scripts.
+- Don't silently ignore validation errors.
+- Don't mix unrelated refactors with feature work.
+- Don't add dependencies unless strictly necessary.
+
+## Agent handoff template
+### Required fields
+- Goal: one sentence describing expected final state.
+- Scope: exact files or folders that can change.
+- Constraints: what must not change.
+- Validation: commands that prove the change.
+- Risks: known uncertainty or follow-up items.
+
+### Status update format
+- Completed: concrete items done.
+- In progress: current active step.
+- Next: immediate next action.
+- Blockers: missing info or external dependency.
+
+### Review checklist
+- [ ] File-level diff is easy to follow.
+- [ ] Tests cover changed behavior.
+- [ ] Output remains deterministic.
+- [ ] No hidden behavior changes.
+- [ ] Error handling is explicit.
+- [ ] Documentation reflects new behavior.
+
+### Escalation rules
+- Escalate when requirements conflict.
+- Escalate before adding dependencies.
+- Escalate before touching unrelated modules.
+- Escalate on ambiguous security implications.
+{{/isStandardOrFull}}
+
+{{#isFull}}
+## Advanced agent protocol
+
+### Change risk matrix
+- Low risk: copy updates, docs wording, isolated tests.
+- Medium risk: template condition changes, validation thresholds.
+- High risk: command detection logic, filesystem writes, CLI argument parsing.
+- For medium/high risk, require explicit before/after examples.
+
+### PR handoff checklist
+- Include rationale for each changed file.
+- Include verification commands and outcomes.
+- List backward-compatibility guarantees.
+- List residual risks and mitigations.
+
+### Failure triage flow
+1. Confirm failing command and exact error text.
+2. Isolate if failure is detection, rendering, or validation.
+3. Reproduce with fixture before touching production paths.
+4. Add regression coverage before finalizing fix.
+
+### CI hardening notes
+- Keep path handling platform neutral (`path.join`, no shell assumptions).
+- Keep tests independent from local machine state.
+- Avoid timing-sensitive assertions.
+- Keep generated artifacts reproducible across OSes.
+
+### Verification matrix
+| Layer | Check | Evidence |
+|---|---|---|
+| CLI | Arg parsing | command output |
+| Detection | scripts/framework | fixture result |
+| Rendering | profile sections | markdown preview |
+| Validation | limits/placeholders | unit tests |
+| E2E | dry-run command | test pass |
+
+### Rollback playbook
+1. Revert profile-specific template blocks first.
+2. Keep parser support only if backward compatible.
+3. Re-run compact profile tests and e2e.
+4. Re-introduce changes in smaller slices.
+
+### Communication protocol
+- Summarize assumptions before coding.
+- Report changed files immediately after edit step.
+- Report executed commands and outcomes.
+- Report unresolved risks before handoff.
+
+### Post-merge audit
+- Verify README examples still run as documented.
+- Verify SPEC and behavior remain aligned.
+- Verify CI pass on at least one Windows runner.
+- Verify default compact output remains unchanged.
+- Verify standard/full remain within configured limits.
+
+### Minimal failure report template
+- Command: exact failing command
+- Expected: what should happen
+- Actual: what happened
+- Suspected layer: detect/render/validate/cli
+- Reproduction fixture: path used
+
+### Final release gate
+- Confirm profile-specific limits pass validator.
+- Confirm placeholder checks remain strict.
+- Confirm default compact output is unchanged.
+- Confirm docs match implemented flags.
+- Confirm test suite is green in CI mode.
+- Confirm no unrelated files changed.
+- Confirm generated markdown still starts with # AGENTS.
+- Confirm profile ordering full > standard > compact.
+{{/isFull}}
+
 ## Seguridad
 {{security_notes}}
 

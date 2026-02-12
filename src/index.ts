@@ -38,6 +38,7 @@ export type {
   RuntimeInfo,
   RuntimeType,
   PackageManager,
+  Profile,
   CanonicalCommands,
   DetectionResult,
   TemplateContext,

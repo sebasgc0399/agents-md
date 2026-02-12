@@ -78,6 +78,164 @@ Antes de considerar una tarea completa:
 - Usar cache de tests para evitar re-ejecutar tests innecesarios
 {{/has_tests}}
 
+{{#isStandardOrFull}}
+## How to work with AI agents
+
+### Task format
+- Define target workspaces and expected outcome.
+- List touched apps/packages before implementation.
+- Keep scope isolated to impacted graph nodes.
+- Ask for explicit verification across affected workspaces.
+
+### Requesting diffs and validation
+- Ask for per-workspace change summary.
+- Ask for exact commands and workspace filters used.
+- Ask for dependency-graph impact notes.
+- Ask for test/build results for impacted packages.
+
+### Monorepo delivery checklist
+- Confirm no unintended cross-workspace API breaks.
+- Confirm package boundaries are respected.
+- Confirm workspace scripts remain canonical.
+- Confirm lockfile and workspace metadata consistency.
+
+## Expanded Definition of Done
+- [ ] Scope complete in affected workspaces only.
+- [ ] Builds/tests pass for impacted graph nodes.
+- [ ] No placeholder values in generated markdown.
+- [ ] Consumer apps validated for shared package changes.
+- [ ] Documentation updated for workspace-level behavior changes.
+
+## Debug checklist
+- Reproduce with filtered command for one workspace first.
+- Validate workspace command detection from root scripts.
+- Check generated output for required monorepo sections.
+- Confirm profile-specific size limits are respected.
+- Re-run focused tests before full repo suite.
+
+## Testing strategy
+- Keep tests targeted with workspace filters where possible.
+- Prioritize regression tests on shared packages.
+- Use deterministic fixtures for command/render behavior.
+{{#has_tests}}
+- Keep command references aligned with `{{commands.test}}`.
+{{/has_tests}}
+
+## Do / Don't
+### Do
+- Do keep shared package APIs stable and explicit.
+- Do isolate changes by workspace when possible.
+- Do document dependency graph impact.
+- Do preserve default compact behavior.
+
+### Don't
+- Don't change root scripts without clear reason.
+- Don't introduce hidden coupling between workspaces.
+- Don't skip impacted consumer validation.
+- Don't mix unrelated workspace refactors.
+
+## Agent handoff template
+### Required fields
+- Goal: one sentence describing expected final state.
+- Scope: exact files or folders that can change.
+- Constraints: what must not change.
+- Validation: commands that prove the change.
+- Risks: known uncertainty or follow-up items.
+
+### Status update format
+- Completed: concrete items done.
+- In progress: current active step.
+- Next: immediate next action.
+- Blockers: missing info or external dependency.
+
+### Review checklist
+- [ ] File-level diff is easy to follow.
+- [ ] Tests cover changed behavior.
+- [ ] Output remains deterministic.
+- [ ] No hidden behavior changes.
+- [ ] Error handling is explicit.
+- [ ] Documentation reflects new behavior.
+
+### Escalation rules
+- Escalate when requirements conflict.
+- Escalate before adding dependencies.
+- Escalate before touching unrelated modules.
+- Escalate on ambiguous security implications.
+{{/isStandardOrFull}}
+
+{{#isFull}}
+## Advanced agent protocol
+
+### Risk classification
+- Low: docs/template-only edits.
+- Medium: profile-gated sections and validator ranges.
+- High: script detection, workspace command rendering, file writes.
+- Require targeted tests for medium/high changes.
+
+### PR handoff checklist
+- Include before/after output for compact/standard/full.
+- Include verification commands with workspace filters.
+- Include compatibility statement for existing root commands.
+- Include residual risk and rollback notes.
+
+### Failure triage flow
+1. Reproduce with fixture and explicit profile.
+2. Isolate detect/render/validate stage.
+3. Verify workspace command extraction assumptions.
+4. Apply minimal patch and add regression coverage.
+
+### CI hardening notes
+- Keep commands shell-neutral where possible.
+- Keep path handling OS-neutral.
+- Keep tests deterministic with fixed fixtures.
+- Avoid flaky ordering assumptions in assertions.
+
+### Verification matrix
+| Layer | Check | Evidence |
+|---|---|---|
+| CLI | Arg parsing | command output |
+| Detection | scripts/framework | fixture result |
+| Rendering | profile sections | markdown preview |
+| Validation | limits/placeholders | unit tests |
+| E2E | dry-run command | test pass |
+
+### Rollback playbook
+1. Revert profile-specific template blocks first.
+2. Keep parser support only if backward compatible.
+3. Re-run compact profile tests and e2e.
+4. Re-introduce changes in smaller slices.
+
+### Communication protocol
+- Summarize assumptions before coding.
+- Report changed files immediately after edit step.
+- Report executed commands and outcomes.
+- Report unresolved risks before handoff.
+
+### Post-merge audit
+- Verify README examples still run as documented.
+- Verify SPEC and behavior remain aligned.
+- Verify CI pass on at least one Windows runner.
+- Verify default compact output remains unchanged.
+- Verify standard/full remain within configured limits.
+
+### Minimal failure report template
+- Command: exact failing command
+- Expected: what should happen
+- Actual: what happened
+- Suspected layer: detect/render/validate/cli
+- Reproduction fixture: path used
+
+### Final release gate
+- Confirm profile-specific limits pass validator.
+- Confirm placeholder checks remain strict.
+- Confirm default compact output is unchanged.
+- Confirm docs match implemented flags.
+- Confirm test suite is green in CI mode.
+- Confirm no unrelated files changed.
+- Confirm generated markdown still starts with # AGENTS.
+- Confirm profile ordering full > standard > compact.
+{{/isFull}}
+
 ## Seguridad
 {{security_notes}}
 

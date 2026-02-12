@@ -2,7 +2,7 @@
  * Build template context from detection results
  */
 
-import { DetectionResult, TemplateContext, PackageInfo } from '../types.js';
+import { DetectionResult, TemplateContext, PackageInfo, Profile } from '../types.js';
 import { detectBuildTools } from '../detect/framework-detector.js';
 
 /**
@@ -135,7 +135,10 @@ function buildStackList(
 /**
  * Build template context from detection result
  */
-export function buildTemplateContext(detection: DetectionResult): TemplateContext {
+export function buildTemplateContext(
+  detection: DetectionResult,
+  profile: Profile = 'compact'
+): TemplateContext {
   const { packageInfo, folderStructure, framework, runtime, commands } = detection;
 
   const stacks = buildStackList(packageInfo, framework, runtime);
@@ -146,6 +149,7 @@ export function buildTemplateContext(detection: DetectionResult): TemplateContex
   return {
     project_name: packageInfo?.name || 'unknown-project',
     project_description: description,
+    profile,
     stacks,
     commands: {
       install: commands.install,
@@ -164,6 +168,10 @@ export function buildTemplateContext(detection: DetectionResult): TemplateContex
     has_format: commands.format !== null,
     has_build: commands.build !== null,
     is_monorepo: folderStructure.isMonorepo,
+    isCompact: profile === 'compact',
+    isStandard: profile === 'standard',
+    isFull: profile === 'full',
+    isStandardOrFull: profile === 'standard' || profile === 'full',
     framework_type: framework.type,
     runtime_type: runtime.type,
   };

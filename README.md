@@ -26,6 +26,11 @@ agents-md init
 # Preview sin escribir archivo
 agents-md init --dry-run
 
+# Elegir perfil de salida (default: compact)
+agents-md init --profile compact
+agents-md init --profile standard
+agents-md init --profile full
+
 # Sobrescribir archivo existente
 agents-md init --force
 
@@ -49,7 +54,13 @@ agents-md init --out ./docs/AGENTS.md
 1. Lee tu `package.json`
 2. Detecta framework y estructura de carpetas
 3. Extrae comandos canónicos desde scripts
-4. Genera un AGENTS.md limpio y conciso (~200-350 líneas)
+4. Genera un AGENTS.md limpio y conciso según el profile seleccionado
+
+## Profiles de salida
+
+- `compact` (default): salida corta y directa (hasta ~110 líneas)
+- `standard`: salida más completa para equipos (~150-230 líneas)
+- `full`: salida más detallada para handoff y CI (~220-360 líneas)
 
 ## Requisitos
 

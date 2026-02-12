@@ -17,12 +17,12 @@ Los equipos que trabajan con AI coding agents (Claude Code, GitHub Copilot, Wind
 
 ## 2. Objetivos v1
 
-- ✅ Generar AGENTS.md conciso (~200-350 líneas, ~800-1500 tokens)
+- ✅ Generar AGENTS.md por perfil (`compact`, `standard`, `full`) con salida determinista
 - ✅ Detección automática desde `package.json` y estructura de carpetas
 - ✅ Extraer comandos canónicos REALES (no inventar scripts)
 - ✅ Output determinista (mismo input = mismo output siempre)
 - ✅ Seguro (no sobrescribir archivos sin confirmación)
-- ✅ CLI intuitivo con flags útiles (--dry-run, --force, --verbose)
+- ✅ CLI intuitivo con flags útiles (--dry-run, --force, --verbose, --profile)
 - ✅ Soportar proyectos comunes: React, Vue, Next.js, Firebase Functions, Monorepos
 
 ---
@@ -58,6 +58,7 @@ agents-md init [path]
 | `--dry-run` | | Preview sin escribir archivo | `false` |
 | `--yes` | `-y` | Saltar confirmaciones | `false` |
 | `--interactive` | `-i` | Modo interactivo con prompts | `false` |
+| `--profile <profile>` | | Perfil de salida: compact \| standard \| full | `compact` |
 | `--verbose` | | Mostrar detalles de detección | `false` |
 
 ### Ejemplos de Uso
@@ -101,6 +102,10 @@ $ agents-md init --verbose
   - Lines: 245 ✓
   - Tokens: ~950 ✓
 ✓ Generated AGENTS.md
+
+# Cambiar perfil de salida
+$ agents-md init --profile standard
+✓ Generated AGENTS.md with profile: standard
 
 # Ruta personalizada
 $ agents-md init --out ./docs/AGENTS.md
@@ -347,8 +352,8 @@ const DEFAULTS = {
 - ✅ No generar código ejecutable en AGENTS.md
 - ✅ Escapar caracteres especiales en comandos
 - ✅ Advertir sobre scripts sospechosos (e.g., `rm -rf`)
-- ✅ Validar longitud del output (200-350 líneas)
-- ✅ Validar token count (800-1500 tokens)
+- ✅ Validar longitud del output según profile
+- ✅ Validar token count según profile
 
 ### 7.4 Determinismo
 
@@ -365,8 +370,12 @@ const DEFAULTS = {
 
 | Métrica | Target | Warning |
 |---------|--------|---------|
-| **Líneas** | 200-350 | <200 o >350 |
-| **Tokens estimados** | 800-1500 | <800 o >1500 |
+| **Líneas (compact)** | 50-110 | <50 o >110 |
+| **Tokens (compact)** | <= 900 | >900 |
+| **Líneas (standard)** | 150-230 | <150 o >230 |
+| **Tokens (standard)** | <= 1600 | >1600 |
+| **Líneas (full)** | 220-360 | <220 o >360 |
+| **Tokens (full)** | <= 2400 | >2400 |
 | **Secciones vacías** | 0 | >0 |
 
 ### 8.2 Estimación de Tokens
@@ -429,10 +438,10 @@ function estimateTokens(content: string): number {
 
 ### 9.3 Output Generado
 
-- [ ] AGENTS.md tiene 200-350 líneas
+- [ ] AGENTS.md respeta límites de líneas según profile
 - [ ] Comandos extraídos coinciden exactamente con `package.json`
 - [ ] No contiene "undefined", "null", o comandos inventados
-- [ ] Estimación de tokens: 800-1500
+- [ ] Estimación de tokens respeta límites según profile
 - [ ] Markdown válido (sin errores de sintaxis)
 
 ### 9.4 Flags del CLI
@@ -440,6 +449,7 @@ function estimateTokens(content: string): number {
 - [ ] `--dry-run`: Muestra output sin escribir archivo
 - [ ] `--force`: Sobrescribe AGENTS.md existente
 - [ ] Sin `--force`: Error si archivo existe
+- [ ] `--profile`: Ajusta extensión de contenido (compact/standard/full)
 - [ ] `--verbose`: Muestra logs detallados de detección
 - [ ] `--out`: Escribe en ruta personalizada
 
@@ -455,7 +465,7 @@ function estimateTokens(content: string): number {
 ## 10. Roadmap Futuro (Post-v1)
 
 **v1.1:**
-- Modo `--interactive` con prompts
+- Flag `--profile` con niveles compact/standard/full
 - Detección de más frameworks (Svelte, Astro)
 - Templates personalizables
 
