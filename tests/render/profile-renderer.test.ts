@@ -1,7 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { detectProject } from '../../src/detect/index.js';
 import { renderAgentsMd } from '../../src/render/index.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const repoRoot = path.resolve(__dirname, '..', '..');
 
 const MAX_LINES = {
   compact: 110,
@@ -20,7 +25,7 @@ function countLines(content: string): number {
 
 describe('renderAgentsMd profiles', () => {
   it('renders compact, standard and full with expected growth and limits', async () => {
-    const fixturePath = path.join(process.cwd(), 'tests', 'fixtures', 'react-vite');
+    const fixturePath = path.join(repoRoot, 'tests', 'fixtures', 'react-vite');
     const detection = await detectProject(fixturePath);
 
     const compactResult = renderAgentsMd(detection, 'compact');

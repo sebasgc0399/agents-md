@@ -1,6 +1,14 @@
 {
   "name": "agents-md",
   "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sebasgc0399/agents-md.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sebasgc0399/agents-md/issues"
+  },
+  "homepage": "https://github.com/sebasgc0399/agents-md#readme",
   "description": "Generate AGENTS.md files for AI coding agents",
   "type": "module",
   "bin": {
@@ -33,7 +41,7 @@
     "copilot",
     "windsurf"
   ],
-  "author": "",
+  "author": "sebasgc0399",
   "license": "MIT",
   "dependencies": {
     "commander": "^11.1.0",

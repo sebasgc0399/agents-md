@@ -1,11 +1,16 @@
 import { describe, it, expect } from 'vitest';
 import path from 'path';
 import { spawnSync } from 'child_process';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const repoRoot = path.resolve(__dirname, '..', '..');
 
 describe('CLI init --dry-run', () => {
   it('renders AGENTS.md for the react-vite fixture', () => {
-    const cliPath = path.join(process.cwd(), 'dist', 'cli.js');
-    const fixturePath = path.join(process.cwd(), 'tests', 'fixtures', 'react-vite');
+    const cliPath = path.join(repoRoot, 'dist', 'cli.js');
+    const fixturePath = path.join(repoRoot, 'tests', 'fixtures', 'react-vite');
 
     const result = spawnSync(
       process.execPath,

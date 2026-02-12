@@ -62,6 +62,15 @@ agents-md init --out ./docs/AGENTS.md
 - `standard`: salida más completa para equipos (~150-230 líneas)
 - `full`: salida más detallada para handoff y CI (~220-360 líneas)
 
+## Output Profiles & Soft Limits
+
+- `compact`: 50-110 lines, max ~900 tokens
+- `standard`: 150-230 lines, max ~1600 tokens
+- `full`: 220-360 lines, max ~2400 tokens
+
+Exceder estos rangos genera **warnings** y no bloquea la generación.
+La generación solo se bloquea cuando hay **errors** de validación.
+
 ## Requisitos
 
 - Node.js 18+

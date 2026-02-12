@@ -36,9 +36,10 @@ export function validateOutput(
   content: string,
   profile: Profile = 'compact'
 ): ValidationResult {
-  const lines = content.split('\n');
+  const normalized = content.replace(/\r\n/g, '\n');
+  const lines = normalized.split('\n');
   const lineCount = lines.length;
-  const estimatedTokens = estimateTokens(content);
+  const estimatedTokens = estimateTokens(normalized);
   const limits = PROFILE_LIMITS[profile];
 
   const warnings: string[] = [];
@@ -76,36 +77,44 @@ export function validateOutput(
     { token: 'null', pattern: /\bnull\b/ },
   ];
   for (const { token, pattern } of forbiddenPlaceholders) {
-    if (pattern.test(content)) {
+    if (pattern.test(normalized)) {
       errors.push(`Output contains forbidden placeholder string: "${token}"`);
     }
   }
 
   // Check for N/A commands (should use conditional rendering instead)
-  const naCount = (content.match(/`N\/A`/g) || []).length;
+  const naCount = (normalized.match(/`N\/A`/g) || []).length;
   if (naCount > 0) {
     warnings.push(
       `Found ${naCount} N/A placeholder(s). Consider hiding missing commands.`
     );
   }
 
-  // Check for empty sections
-  const emptySectionRegex = /^##\s+.+\s*$/gm;
-  const sections = content.match(emptySectionRegex) || [];
-  for (const section of sections) {
-    const sectionIndex = content.indexOf(section);
-    const nextSectionIndex = content.indexOf('##', sectionIndex + section.length);
-    const sectionContent = content.substring(
-      sectionIndex + section.length,
-      nextSectionIndex === -1 ? content.length : nextSectionIndex
-    );
+  // Check for empty level-2 sections (ignore level-3 headings as boundaries).
+  const headingRegex = /^##\s+.+$/gm;
+  const headings = Array.from(normalized.matchAll(headingRegex));
+  for (let i = 0; i < headings.length; i++) {
+    const heading = headings[i];
+    const headingIndex = heading.index;
+    if (headingIndex === undefined) {
+      continue;
+    }
 
-    if (sectionContent.trim().length < 10) {
-      warnings.push(`Section "${section.trim()}" appears to be empty`);
+    const headingLine = heading[0];
+    const start = headingIndex;
+    const end = headings[i + 1]?.index ?? normalized.length;
+    const sectionBody = normalized.slice(start + headingLine.length, end);
+    const hasNonEmptyLine = sectionBody
+      .split('\n')
+      .some(line => line.trim().length > 0);
+
+    if (!hasNonEmptyLine) {
+      warnings.push(`Section "${headingLine.trim()}" appears to be empty`);
     }
   }
 
-  const valid = errors.length === 0 && warnings.length === 0;
+  // Warnings are soft limits and should not block generation.
+  const valid = errors.length === 0;
 
   return {
     valid,

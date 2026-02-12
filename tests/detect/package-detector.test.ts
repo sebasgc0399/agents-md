@@ -1,8 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { detectPackageInfo } from '../../src/detect/package-detector.js';
 
-const fixturesDir = path.join(process.cwd(), 'tests', 'fixtures');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const repoRoot = path.resolve(__dirname, '..', '..');
+const fixturesDir = path.join(repoRoot, 'tests', 'fixtures');
 
 describe('detectPackageInfo', () => {
   it('should detect React + Vite project', async () => {
