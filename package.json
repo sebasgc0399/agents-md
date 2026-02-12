@@ -1,5 +1,5 @@
 {
-  "name": "agents-md",
+  "name": "agentsmd",
   "version": "1.0.0",
   "repository": {
     "type": "git",
@@ -12,7 +12,7 @@
   "description": "Generate AGENTS.md files for AI coding agents",
   "type": "module",
   "bin": {
-    "agents-md": "./dist/cli.js"
+    "agentsmd": "./dist/cli.js"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -29,7 +29,8 @@
     "start": "node dist/cli.js",
     "test": "npm run build && vitest run",
     "test:watch": "vitest",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "npm run build && npm test"
   },
   "keywords": [
     "agents",
@@ -49,6 +50,7 @@
     "README.md"
   ],
   "dependencies": {
+    "agentsmd": "file:agentsmd-1.0.0.tgz",
     "commander": "^11.1.0",
     "mustache": "^4.2.0"
   },

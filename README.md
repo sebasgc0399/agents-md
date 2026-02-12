@@ -1,4 +1,4 @@
-# agents-md
+# agentsmd
 
 CLI para generar archivos AGENTS.md automáticamente para proyectos Node.js.
 
@@ -11,34 +11,60 @@ AGENTS.md es un "README para AI agents" que reduce las alucinaciones de agentes 
 - Reglas de seguridad
 - Definition of Done
 
-## Instalación
+## Quickstart
+
+**Uso sin instalación** (recomendado):
 
 ```bash
-npm install -g agents-md
+# Generar AGENTS.md en el directorio actual
+npx agentsmd init
+
+# Preview sin escribir archivo
+npx agentsmd init --dry-run
+
+# Elegir perfil de salida
+npx agentsmd init --profile compact    # ~70 líneas (default)
+npx agentsmd init --profile standard   # ~150 líneas
+npx agentsmd init --profile full       # ~220 líneas
 ```
+
+## Instalación
+
+**Opción 1: Sin instalación (npx)**
+```bash
+npx agentsmd init
+```
+
+**Opción 2: Instalación global**
+```bash
+npm install -g agentsmd
+agentsmd init
+```
+
+**Requisitos**: Node.js ≥18
 
 ## Uso
 
 ```bash
 # Generar AGENTS.md en el directorio actual
-agents-md init
+agentsmd init
 
 # Preview sin escribir archivo
-agents-md init --dry-run
+agentsmd init --dry-run
 
 # Elegir perfil de salida (default: compact)
-agents-md init --profile compact
-agents-md init --profile standard
-agents-md init --profile full
+agentsmd init --profile compact
+agentsmd init --profile standard
+agentsmd init --profile full
 
 # Sobrescribir archivo existente
-agents-md init --force
+agentsmd init --force
 
 # Modo verbose (mostrar detalles de detección)
-agents-md init --verbose
+agentsmd init --verbose
 
 # Especificar ruta de salida
-agents-md init --out ./docs/AGENTS.md
+agentsmd init --out ./docs/AGENTS.md
 ```
 
 ## Proyectos Soportados
