@@ -95,6 +95,35 @@ npm test
 npm run lint
 ```
 
+## Contributing
+
+Thanks for helping improve **agents-md** — contributions are welcome.
+
+To keep the project high-signal and easy to maintain, please:
+
+- **Open an issue first** for non-trivial changes (new features, behavior changes, template expansions).
+- Include a clear **problem statement**, **proposed solution**, and **why** it's the right trade-off.
+- If you used an AI assistant, that's totally fine — please make sure the result is **reviewed by you**, tested locally, and aligned with the repo's conventions.  
+  In other words: AI can help you move faster, but the PR should reflect **your engineering judgment**.
+- Keep PRs **small and focused** when possible.
+- Add or update **tests** when behavior changes.
+- Run `npm test` before submitting.
+
+### Development
+
+- Install: `npm install`
+- Build: `npm run build`
+- Test: `npm test`
+
+## Support
+
+If you find this tool useful, you can support the project by:
+
+- Starring the repo
+- Sharing it with your team
+- Reporting bugs with reproducible steps
+- Proposing improvements via issues or well-scoped PRs
+
 ## License
 
 MIT © 2026 sebasgc0399
