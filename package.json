@@ -43,6 +43,11 @@
   ],
   "author": "sebasgc0399",
   "license": "MIT",
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
   "dependencies": {
     "commander": "^11.1.0",
     "mustache": "^4.2.0"

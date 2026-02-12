@@ -95,6 +95,6 @@ npm test
 npm run lint
 ```
 
-## Licencia
+## License
 
-MIT
+MIT © 2026 sebasgc0399
