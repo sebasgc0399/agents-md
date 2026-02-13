@@ -1,26 +1,18 @@
 {
-  "name": "my-vue-vite-app",
-  "version": "1.0.0",
-  "description": "Vue dashboard for internal operations.\nScope: manage orders, customer status, and audit events.\nAudience: support and operations teams.\nEntry points: authenticated web routes only.\nData sources: backend REST APIs and reporting endpoints.\nUI rules: accessible components and keyboard navigation.\nState model: server state plus minimal local UI state.\nError handling: clear user-safe messages and retry flows.\nPerformance: lazy loading for heavy report views.\nSecurity: no secrets in client code, sanitize user inputs.\nTesting: component behavior and critical interaction paths.\nBuild: deterministic output for CI and release pipelines.\nRelease notes: summarize visible user-facing changes.\nSupport model: include escalation owner for incidents.\nMonitoring: track errors, latency, and failed requests.\nCompatibility: keep Node and browser targets documented.\nDocs: update runbooks when script behavior changes.",
-  "type": "module",
+  "name": "vue-vite-fixture",
+  "private": true,
+  "description": "fixture",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "test": "vitest run",
-    "lint": "eslint .",
-    "format": "prettier --check ."
+    "test": "echo \"no tests\"",
+    "lint": "echo \"no lint\""
   },
   "dependencies": {
     "vue": "^3.4.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.0.0",
-    "eslint": "^8.55.0",
-    "esbuild": "^0.20.0",
-    "prettier": "^3.2.0",
-    "rollup": "^4.9.0",
-    "typescript": "^5.3.3",
     "vite": "^5.0.0",
-    "vitest": "^1.0.0"
+    "@vitejs/plugin-vue": "^5.0.0"
   }
 }
