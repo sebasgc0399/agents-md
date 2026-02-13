@@ -172,6 +172,7 @@ export function buildTemplateContext(
     isStandard: profile === 'standard',
     isFull: profile === 'full',
     isStandardOrFull: profile === 'standard' || profile === 'full',
+    is_unknown_generic: framework.type === 'unknown' && !folderStructure.isMonorepo,
     framework_type: framework.type,
     runtime_type: runtime.type,
   };

@@ -93,6 +93,73 @@ Antes de considerar una tarea completa:
 - If no test script exists, document manual verification steps.
 {{/has_tests}}
 
+{{#is_unknown_generic}}
+## Generic project execution playbook
+
+### Scope and boundaries
+- Prefer minimal, reversible changes over broad refactors.
+- Keep runtime and package-manager assumptions explicit.
+- Reuse existing folder conventions before introducing new structure.
+- Document any intentional tradeoff in the final handoff notes.
+- Keep public behavior stable unless the task explicitly requires change.
+
+### Baseline repository map
+- Confirm current source folders (`src`, `lib`, `app`, `scripts`) before editing.
+- Confirm test locations (`tests`, `__tests__`, `spec`) before adding files.
+- Confirm config entrypoints (`tsconfig`, linter, formatter, CI workflow) before updates.
+- Keep generated output deterministic across Windows and Linux runners.
+- Confirm output path and file ownership rules before writing AGENTS.md.
+
+### Change workflow
+1. Reproduce the issue with one deterministic command.
+2. Isolate the minimal layer to update (detect, render, validate, or cli).
+3. Add or update targeted tests before broad regression checks.
+4. Report changed files, commands run, and residual risks.
+
+### Validation when canonical scripts are missing
+- Run every available canonical command and capture output.
+{{^has_dev}}
+- If no dev script exists, describe the manual startup path in PR notes.
+{{/has_dev}}
+{{^has_build}}
+- If no build script exists, validate TypeScript or bundler config syntax directly.
+{{/has_build}}
+{{^has_tests}}
+- If no test script exists, add manual verification steps with deterministic inputs.
+{{/has_tests}}
+{{^has_lint}}
+- If no lint script exists, document style checks applied during review.
+{{/has_lint}}
+{{^has_format}}
+- If no format script exists, keep formatting changes isolated and minimal.
+{{/has_format}}
+
+### Generic PR checklist
+- [ ] Scope and files changed match the original request.
+- [ ] Validation evidence is attached for each claimed behavior change.
+- [ ] Backward compatibility assumptions are explicit.
+- [ ] Deterministic output is preserved for the same inputs.
+- [ ] Follow-up tasks are listed when work is intentionally deferred.
+
+### Handoff notes to include (generic repos)
+- What changed: list files and why.
+- How to validate: exact commands and expected outputs.
+- Risks: what could break and how to detect it fast.
+- Rollback: safest revert path if needed.
+
+### Updating scripts and docs safely
+- If a `package.json` script changes, update "Comandos canónicos".
+- For build/test/lint edits, include before/after command output.
+- Keep CI changes minimal and cross-platform.
+- Prefer reversible config updates scoped to the task.
+
+### Pre-merge sanity checks
+- Preview headings and checklist readability.
+- Re-run command examples on a clean clone.
+- Confirm profile output stays inside limits.
+- Confirm no placeholder content leaked.
+{{/is_unknown_generic}}
+
 ## Do / Don't
 ### Do
 - Do preserve existing behavior unless a change is requested.
@@ -206,6 +273,20 @@ Antes de considerar una tarea completa:
 - Confirm no unrelated files changed.
 - Confirm generated markdown still starts with # AGENTS.
 - Confirm profile ordering full > standard > compact.
+
+{{#is_unknown_generic}}
+## Generic full-profile operations guide
+
+### CI and branching policy
+- Require build, lint, and tests (or documented manual checks) before merge.
+- Keep branch names tied to one task or issue identifier.
+- Add rollback notes when behavior or templates change.
+
+### Extra verification for generic repos
+- Verify command paths for npm/yarn/pnpm when scripts are touched.
+- Capture before/after output for affected profile sections.
+- Include one failure-path test for validator or CLI behavior changes.
+{{/is_unknown_generic}}
 {{/isFull}}
 
 ## Seguridad

@@ -23,6 +23,13 @@ function countLines(content: string): number {
   return content.split('\n').length;
 }
 
+function getLengthWarnings(warnings: string[]): string[] {
+  return warnings.filter(
+    warning =>
+      warning.startsWith('Output is quite short') || warning.startsWith('Output is too long')
+  );
+}
+
 describe('renderAgentsMd profiles', () => {
   it('renders compact, standard and full with expected growth and limits', async () => {
     const fixturePath = path.join(repoRoot, 'tests', 'fixtures', 'react-vite');
@@ -52,5 +59,62 @@ describe('renderAgentsMd profiles', () => {
 
     // Backward compatibility: default profile should behave as compact.
     expect(defaultResult.content).toBe(compactResult.content);
+  });
+
+  it('keeps unknown generic standard/full within length limits without length warnings', async () => {
+    const fixturePath = path.join(repoRoot, 'tests', 'fixtures', 'runtime-npm');
+    const detection = await detectProject(fixturePath);
+
+    expect(detection.framework.type).toBe('unknown');
+    expect(detection.folderStructure.isMonorepo).toBe(false);
+
+    const standardResult = renderAgentsMd(detection, 'standard');
+    const fullResult = renderAgentsMd(detection, 'full');
+
+    expect(standardResult.validation.lineCount).toBeGreaterThanOrEqual(MIN_LINES.standard);
+    expect(standardResult.validation.lineCount).toBeLessThanOrEqual(MAX_LINES.standard);
+    expect(fullResult.validation.lineCount).toBeGreaterThanOrEqual(MIN_LINES.full);
+    expect(fullResult.validation.lineCount).toBeLessThanOrEqual(MAX_LINES.full);
+
+    expect(getLengthWarnings(standardResult.validation.warnings)).toEqual([]);
+    expect(getLengthWarnings(fullResult.validation.warnings)).toEqual([]);
+  });
+
+  it('keeps known stack profiles free of length warning regressions', async () => {
+    const reactPath = path.join(repoRoot, 'tests', 'fixtures', 'react-vite');
+    const monorepoPath = path.join(repoRoot, 'tests', 'fixtures', 'monorepo-turbo');
+
+    const reactDetection = await detectProject(reactPath);
+    const monorepoDetection = await detectProject(monorepoPath);
+
+    const reactStandard = renderAgentsMd(reactDetection, 'standard');
+    const reactFull = renderAgentsMd(reactDetection, 'full');
+    const monorepoStandard = renderAgentsMd(monorepoDetection, 'standard');
+    const monorepoFull = renderAgentsMd(monorepoDetection, 'full');
+
+    expect(getLengthWarnings(reactStandard.validation.warnings)).toEqual([]);
+    expect(getLengthWarnings(reactFull.validation.warnings)).toEqual([]);
+    expect(getLengthWarnings(monorepoStandard.validation.warnings)).toEqual([]);
+    expect(getLengthWarnings(monorepoFull.validation.warnings)).toEqual([]);
+
+    expect(reactStandard.content).toContain('React delivery checklist');
+    expect(monorepoStandard.content).toContain('Monorepo delivery checklist');
+  });
+
+  it('does not leak unknown generic block into vue projects using base template', async () => {
+    const fixturePath = path.join(repoRoot, 'tests', 'fixtures', 'vue-vite');
+    const detection = await detectProject(fixturePath);
+
+    expect(detection.framework.type).toBe('vue');
+    expect(detection.folderStructure.isMonorepo).toBe(false);
+
+    const standardResult = renderAgentsMd(detection, 'standard');
+    const fullResult = renderAgentsMd(detection, 'full');
+
+    expect(standardResult.content).not.toContain('## Generic project execution playbook');
+    expect(fullResult.content).not.toContain('## Generic project execution playbook');
+
+    expect(getLengthWarnings(standardResult.validation.warnings)).toEqual([]);
+    expect(getLengthWarnings(fullResult.validation.warnings)).toEqual([]);
   });
 });

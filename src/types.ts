@@ -112,6 +112,7 @@ export interface TemplateContext {
   isStandard: boolean;
   isFull: boolean;
   isStandardOrFull: boolean;
+  is_unknown_generic?: boolean;
   framework_type: string;
   runtime_type: string;
 }
