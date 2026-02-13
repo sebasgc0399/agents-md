@@ -13,26 +13,31 @@ AGENTS.md es un "README para AI agents" que reduce las alucinaciones de agentes 
 
 ## Quickstart
 
+**Nombres importantes (evitar confusiones):**
+- **Package en npm:** `@sebasgc0399/agents-md`
+- **Bin/command instalado:** `agents-md`
+- No usar `npx agents-md ...` (sin scope), porque puede ejecutar otro paquete distinto en npm.
+
 **Uso sin instalación** (recomendado):
 
 ```bash
 # Generar AGENTS.md en el directorio actual
-npx @sebasgc0399/agents-md init
+npx -p @sebasgc0399/agents-md agents-md init
 
 # Preview sin escribir archivo
-npx @sebasgc0399/agents-md init --dry-run
+npx -p @sebasgc0399/agents-md agents-md init --dry-run
 
 # Elegir perfil de salida
-npx @sebasgc0399/agents-md init --profile compact    # ~70 líneas (default)
-npx @sebasgc0399/agents-md init --profile standard   # ~150 líneas
-npx @sebasgc0399/agents-md init --profile full       # ~220 líneas
+npx -p @sebasgc0399/agents-md agents-md init --profile compact    # ~70 líneas (default)
+npx -p @sebasgc0399/agents-md agents-md init --profile standard   # ~150 líneas
+npx -p @sebasgc0399/agents-md agents-md init --profile full       # ~220 líneas
 ```
 
 ## Instalación
 
 **Opción 1: Sin instalación (npx)**
 ```bash
-npx @sebasgc0399/agents-md init
+npx -p @sebasgc0399/agents-md agents-md init
 ```
 
 **Opción 2: Instalación global**
