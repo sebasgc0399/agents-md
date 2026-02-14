@@ -265,6 +265,40 @@ function scoreStructure(content) {
   };
 }
 
+function getNormalizedH2Headings(content) {
+  return content
+    .split(/\r?\n/)
+    .filter(line => /^##\s+/.test(line))
+    .map(line => normalizeText(line.replace(/^##\s+/, '')));
+}
+
+function buildSemanticSnapshot({
+  content,
+  extractedCommands,
+  blockingPlaceholderHits,
+  lockInHits,
+  sectionWarnings,
+}) {
+  const h2HeadingsNormalized = getNormalizedH2Headings(content);
+  const requiredSectionsPresent = REQUIRED_SECTIONS.filter(requiredSection =>
+    h2HeadingsNormalized.some(heading => heading.includes(requiredSection))
+  ).sort();
+  const requiredSectionsMissing = REQUIRED_SECTIONS.filter(
+    requiredSection => !requiredSectionsPresent.includes(requiredSection)
+  ).sort();
+
+  return {
+    h2HeadingsNormalized,
+    requiredSectionsPresent,
+    requiredSectionsMissing,
+    canonicalCommands: [...new Set(extractedCommands)].sort(),
+    canonicalCommandCount: extractedCommands.length,
+    hasBlockingPlaceholders: blockingPlaceholderHits.length > 0,
+    hasToolSpecificInstructions: lockInHits.length > 0,
+    emptySectionCount: sectionWarnings.length,
+  };
+}
+
 function scoreActionability(commandCount, precision, threshold) {
   if (commandCount === 0) {
     return 0;
@@ -442,6 +476,16 @@ async function main() {
           lockInHits: [],
           validatorErrors: [],
         },
+        semantic: {
+          h2HeadingsNormalized: [],
+          requiredSectionsPresent: [],
+          requiredSectionsMissing: [],
+          canonicalCommands: [],
+          canonicalCommandCount: 0,
+          hasBlockingPlaceholders: false,
+          hasToolSpecificInstructions: false,
+          emptySectionCount: 0,
+        },
         gateFailures: [],
       };
 
@@ -533,6 +577,13 @@ async function main() {
       caseResult.commands.valid = validCommands;
       caseResult.commands.invalid = invalidCommands;
       caseResult.commands.precision = precision;
+      caseResult.semantic = buildSemanticSnapshot({
+        content: firstPreview,
+        extractedCommands: normalizedExtractedCommands,
+        blockingPlaceholderHits,
+        lockInHits,
+        sectionWarnings: caseResult.validation.sectionWarnings,
+      });
 
       const structureScore = scoreStructure(firstPreview);
       const actionabilityScore = scoreActionability(

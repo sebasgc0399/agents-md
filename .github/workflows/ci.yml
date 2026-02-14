@@ -41,5 +41,8 @@ jobs:
       - name: Benchmark lite
         run: npm run benchmark:lite
 
+      - name: Benchmark p1
+        run: npm run benchmark:p1
+
       - name: Package smoke check
         run: npm pack --dry-run

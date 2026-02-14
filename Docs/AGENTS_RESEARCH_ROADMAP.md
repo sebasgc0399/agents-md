@@ -218,6 +218,7 @@ Para cambios de benchmark/harness (cuando exista):
 
 ```bash
 npm run benchmark:lite
+npm run benchmark:p1
 ```
 
 ## 9) Estado operativo P0 (branch actual)
@@ -226,3 +227,11 @@ npm run benchmark:lite
 - [x] Script npm `benchmark:lite` disponible.
 - [x] Gate CI agregado en Ubuntu y Windows.
 - [x] Tests iniciales del harness agregados.
+
+## 10) Estado operativo P1 nucleo (branch actual)
+
+- [x] Baseline semantico versionado (`tests/benchmark/baselines/p1.semantic.json`).
+- [x] Verificador P1 (`scripts/benchmark/p1.mjs`) con modo check/update.
+- [x] Gate CI `npm run benchmark:p1` agregado.
+- [x] Presupuesto de regresion activado (`score actual >= baseline - 1`).
+- [x] Lineas/tokens se mantienen como warning no bloqueante.

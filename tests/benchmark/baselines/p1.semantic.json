@@ -1,0 +1,780 @@
+{
+  "version": 1,
+  "fixtures": [
+    "firebase-with-functions",
+    "monorepo-pnpm-workspace",
+    "monorepo-turbo",
+    "react-vite",
+    "runtime-npm",
+    "vue-vite"
+  ],
+  "profiles": [
+    "compact",
+    "full",
+    "standard"
+  ],
+  "cases": [
+    {
+      "fixture": "firebase-with-functions",
+      "profile": "compact",
+      "scoreTotal": 11,
+      "scoreThreshold": 7,
+      "precision": 1,
+      "precisionThreshold": 0.9,
+      "semantic": {
+        "h2HeadingsNormalized": [
+          "proposito del repositorio",
+          "tech stack",
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "environment variables",
+          "seguridad",
+          "deployment"
+        ],
+        "requiredSectionsPresent": [
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "proposito del repositorio",
+          "seguridad",
+          "tech stack"
+        ],
+        "requiredSectionsMissing": [],
+        "canonicalCommands": [
+          "firebase deploy --only functions",
+          "npm install",
+          "npm run serve"
+        ],
+        "canonicalCommandCount": 3,
+        "hasBlockingPlaceholders": false,
+        "hasToolSpecificInstructions": false,
+        "emptySectionCount": 0
+      }
+    },
+    {
+      "fixture": "firebase-with-functions",
+      "profile": "full",
+      "scoreTotal": 11,
+      "scoreThreshold": 9,
+      "precision": 1,
+      "precisionThreshold": 0.95,
+      "semantic": {
+        "h2HeadingsNormalized": [
+          "proposito del repositorio",
+          "tech stack",
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "environment variables",
+          "how to work with ai agents",
+          "expanded definition of done",
+          "debug checklist",
+          "testing strategy",
+          "do / don't",
+          "agent handoff template",
+          "advanced agent protocol",
+          "seguridad",
+          "deployment"
+        ],
+        "requiredSectionsPresent": [
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "proposito del repositorio",
+          "seguridad",
+          "tech stack"
+        ],
+        "requiredSectionsMissing": [],
+        "canonicalCommands": [
+          "firebase deploy --only functions",
+          "npm install",
+          "npm run serve"
+        ],
+        "canonicalCommandCount": 3,
+        "hasBlockingPlaceholders": false,
+        "hasToolSpecificInstructions": false,
+        "emptySectionCount": 0
+      }
+    },
+    {
+      "fixture": "firebase-with-functions",
+      "profile": "standard",
+      "scoreTotal": 11,
+      "scoreThreshold": 8,
+      "precision": 1,
+      "precisionThreshold": 0.95,
+      "semantic": {
+        "h2HeadingsNormalized": [
+          "proposito del repositorio",
+          "tech stack",
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "environment variables",
+          "how to work with ai agents",
+          "expanded definition of done",
+          "debug checklist",
+          "testing strategy",
+          "do / don't",
+          "agent handoff template",
+          "seguridad",
+          "deployment"
+        ],
+        "requiredSectionsPresent": [
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "proposito del repositorio",
+          "seguridad",
+          "tech stack"
+        ],
+        "requiredSectionsMissing": [],
+        "canonicalCommands": [
+          "firebase deploy --only functions",
+          "npm install",
+          "npm run serve"
+        ],
+        "canonicalCommandCount": 3,
+        "hasBlockingPlaceholders": false,
+        "hasToolSpecificInstructions": false,
+        "emptySectionCount": 0
+      }
+    },
+    {
+      "fixture": "monorepo-pnpm-workspace",
+      "profile": "compact",
+      "scoreTotal": 11,
+      "scoreThreshold": 7,
+      "precision": 1,
+      "precisionThreshold": 0.9,
+      "semantic": {
+        "h2HeadingsNormalized": [
+          "proposito del repositorio",
+          "tech stack",
+          "estructura del monorepo",
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "seguridad",
+          "build y deploy"
+        ],
+        "requiredSectionsPresent": [
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "proposito del repositorio",
+          "seguridad",
+          "tech stack"
+        ],
+        "requiredSectionsMissing": [],
+        "canonicalCommands": [
+          "npm install"
+        ],
+        "canonicalCommandCount": 1,
+        "hasBlockingPlaceholders": false,
+        "hasToolSpecificInstructions": false,
+        "emptySectionCount": 0
+      }
+    },
+    {
+      "fixture": "monorepo-pnpm-workspace",
+      "profile": "full",
+      "scoreTotal": 11,
+      "scoreThreshold": 9,
+      "precision": 1,
+      "precisionThreshold": 0.95,
+      "semantic": {
+        "h2HeadingsNormalized": [
+          "proposito del repositorio",
+          "tech stack",
+          "estructura del monorepo",
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "how to work with ai agents",
+          "expanded definition of done",
+          "debug checklist",
+          "testing strategy",
+          "do / don't",
+          "agent handoff template",
+          "advanced agent protocol",
+          "seguridad",
+          "build y deploy"
+        ],
+        "requiredSectionsPresent": [
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "proposito del repositorio",
+          "seguridad",
+          "tech stack"
+        ],
+        "requiredSectionsMissing": [],
+        "canonicalCommands": [
+          "npm install"
+        ],
+        "canonicalCommandCount": 1,
+        "hasBlockingPlaceholders": false,
+        "hasToolSpecificInstructions": false,
+        "emptySectionCount": 0
+      }
+    },
+    {
+      "fixture": "monorepo-pnpm-workspace",
+      "profile": "standard",
+      "scoreTotal": 11,
+      "scoreThreshold": 8,
+      "precision": 1,
+      "precisionThreshold": 0.95,
+      "semantic": {
+        "h2HeadingsNormalized": [
+          "proposito del repositorio",
+          "tech stack",
+          "estructura del monorepo",
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "how to work with ai agents",
+          "expanded definition of done",
+          "debug checklist",
+          "testing strategy",
+          "do / don't",
+          "agent handoff template",
+          "seguridad",
+          "build y deploy"
+        ],
+        "requiredSectionsPresent": [
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "proposito del repositorio",
+          "seguridad",
+          "tech stack"
+        ],
+        "requiredSectionsMissing": [],
+        "canonicalCommands": [
+          "npm install"
+        ],
+        "canonicalCommandCount": 1,
+        "hasBlockingPlaceholders": false,
+        "hasToolSpecificInstructions": false,
+        "emptySectionCount": 0
+      }
+    },
+    {
+      "fixture": "monorepo-turbo",
+      "profile": "compact",
+      "scoreTotal": 11,
+      "scoreThreshold": 7,
+      "precision": 1,
+      "precisionThreshold": 0.9,
+      "semantic": {
+        "h2HeadingsNormalized": [
+          "proposito del repositorio",
+          "tech stack",
+          "estructura del monorepo",
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "testing guidelines",
+          "seguridad",
+          "build y deploy"
+        ],
+        "requiredSectionsPresent": [
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "proposito del repositorio",
+          "seguridad",
+          "tech stack"
+        ],
+        "requiredSectionsMissing": [],
+        "canonicalCommands": [
+          "npm install",
+          "npm run build",
+          "npm run dev",
+          "npm run lint",
+          "npm test"
+        ],
+        "canonicalCommandCount": 5,
+        "hasBlockingPlaceholders": false,
+        "hasToolSpecificInstructions": false,
+        "emptySectionCount": 0
+      }
+    },
+    {
+      "fixture": "monorepo-turbo",
+      "profile": "full",
+      "scoreTotal": 11,
+      "scoreThreshold": 9,
+      "precision": 1,
+      "precisionThreshold": 0.95,
+      "semantic": {
+        "h2HeadingsNormalized": [
+          "proposito del repositorio",
+          "tech stack",
+          "estructura del monorepo",
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "testing guidelines",
+          "how to work with ai agents",
+          "expanded definition of done",
+          "debug checklist",
+          "testing strategy",
+          "do / don't",
+          "agent handoff template",
+          "advanced agent protocol",
+          "seguridad",
+          "build y deploy"
+        ],
+        "requiredSectionsPresent": [
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "proposito del repositorio",
+          "seguridad",
+          "tech stack"
+        ],
+        "requiredSectionsMissing": [],
+        "canonicalCommands": [
+          "npm install",
+          "npm run build",
+          "npm run dev",
+          "npm run lint",
+          "npm test"
+        ],
+        "canonicalCommandCount": 5,
+        "hasBlockingPlaceholders": false,
+        "hasToolSpecificInstructions": false,
+        "emptySectionCount": 0
+      }
+    },
+    {
+      "fixture": "monorepo-turbo",
+      "profile": "standard",
+      "scoreTotal": 11,
+      "scoreThreshold": 8,
+      "precision": 1,
+      "precisionThreshold": 0.95,
+      "semantic": {
+        "h2HeadingsNormalized": [
+          "proposito del repositorio",
+          "tech stack",
+          "estructura del monorepo",
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "testing guidelines",
+          "how to work with ai agents",
+          "expanded definition of done",
+          "debug checklist",
+          "testing strategy",
+          "do / don't",
+          "agent handoff template",
+          "seguridad",
+          "build y deploy"
+        ],
+        "requiredSectionsPresent": [
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "proposito del repositorio",
+          "seguridad",
+          "tech stack"
+        ],
+        "requiredSectionsMissing": [],
+        "canonicalCommands": [
+          "npm install",
+          "npm run build",
+          "npm run dev",
+          "npm run lint",
+          "npm test"
+        ],
+        "canonicalCommandCount": 5,
+        "hasBlockingPlaceholders": false,
+        "hasToolSpecificInstructions": false,
+        "emptySectionCount": 0
+      }
+    },
+    {
+      "fixture": "react-vite",
+      "profile": "compact",
+      "scoreTotal": 11,
+      "scoreThreshold": 7,
+      "precision": 1,
+      "precisionThreshold": 0.9,
+      "semantic": {
+        "h2HeadingsNormalized": [
+          "proposito del repositorio",
+          "tech stack",
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "testing guidelines",
+          "seguridad"
+        ],
+        "requiredSectionsPresent": [
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "proposito del repositorio",
+          "seguridad",
+          "tech stack"
+        ],
+        "requiredSectionsMissing": [],
+        "canonicalCommands": [
+          "npm install",
+          "npm run build",
+          "npm run dev",
+          "npm run lint",
+          "npm test"
+        ],
+        "canonicalCommandCount": 5,
+        "hasBlockingPlaceholders": false,
+        "hasToolSpecificInstructions": false,
+        "emptySectionCount": 0
+      }
+    },
+    {
+      "fixture": "react-vite",
+      "profile": "full",
+      "scoreTotal": 11,
+      "scoreThreshold": 9,
+      "precision": 1,
+      "precisionThreshold": 0.95,
+      "semantic": {
+        "h2HeadingsNormalized": [
+          "proposito del repositorio",
+          "tech stack",
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "testing guidelines",
+          "how to work with ai agents",
+          "expanded definition of done",
+          "debug checklist",
+          "testing strategy",
+          "do / don't",
+          "agent handoff template",
+          "advanced agent protocol",
+          "seguridad"
+        ],
+        "requiredSectionsPresent": [
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "proposito del repositorio",
+          "seguridad",
+          "tech stack"
+        ],
+        "requiredSectionsMissing": [],
+        "canonicalCommands": [
+          "npm install",
+          "npm run build",
+          "npm run dev",
+          "npm run lint",
+          "npm test"
+        ],
+        "canonicalCommandCount": 5,
+        "hasBlockingPlaceholders": false,
+        "hasToolSpecificInstructions": false,
+        "emptySectionCount": 0
+      }
+    },
+    {
+      "fixture": "react-vite",
+      "profile": "standard",
+      "scoreTotal": 11,
+      "scoreThreshold": 8,
+      "precision": 1,
+      "precisionThreshold": 0.95,
+      "semantic": {
+        "h2HeadingsNormalized": [
+          "proposito del repositorio",
+          "tech stack",
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "testing guidelines",
+          "how to work with ai agents",
+          "expanded definition of done",
+          "debug checklist",
+          "testing strategy",
+          "do / don't",
+          "agent handoff template",
+          "seguridad"
+        ],
+        "requiredSectionsPresent": [
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "proposito del repositorio",
+          "seguridad",
+          "tech stack"
+        ],
+        "requiredSectionsMissing": [],
+        "canonicalCommands": [
+          "npm install",
+          "npm run build",
+          "npm run dev",
+          "npm run lint",
+          "npm test"
+        ],
+        "canonicalCommandCount": 5,
+        "hasBlockingPlaceholders": false,
+        "hasToolSpecificInstructions": false,
+        "emptySectionCount": 0
+      }
+    },
+    {
+      "fixture": "runtime-npm",
+      "profile": "compact",
+      "scoreTotal": 11,
+      "scoreThreshold": 7,
+      "precision": 1,
+      "precisionThreshold": 0.9,
+      "semantic": {
+        "h2HeadingsNormalized": [
+          "proposito del repositorio",
+          "tech stack",
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "seguridad"
+        ],
+        "requiredSectionsPresent": [
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "proposito del repositorio",
+          "seguridad",
+          "tech stack"
+        ],
+        "requiredSectionsMissing": [],
+        "canonicalCommands": [
+          "npm install"
+        ],
+        "canonicalCommandCount": 1,
+        "hasBlockingPlaceholders": false,
+        "hasToolSpecificInstructions": false,
+        "emptySectionCount": 0
+      }
+    },
+    {
+      "fixture": "runtime-npm",
+      "profile": "full",
+      "scoreTotal": 11,
+      "scoreThreshold": 9,
+      "precision": 1,
+      "precisionThreshold": 0.95,
+      "semantic": {
+        "h2HeadingsNormalized": [
+          "proposito del repositorio",
+          "tech stack",
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "how to work with ai agents",
+          "expanded definition of done",
+          "debug checklist",
+          "testing strategy",
+          "generic project execution playbook",
+          "do / don't",
+          "agent handoff template",
+          "advanced agent protocol",
+          "generic full-profile operations guide",
+          "seguridad"
+        ],
+        "requiredSectionsPresent": [
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "proposito del repositorio",
+          "seguridad",
+          "tech stack"
+        ],
+        "requiredSectionsMissing": [],
+        "canonicalCommands": [
+          "npm install"
+        ],
+        "canonicalCommandCount": 1,
+        "hasBlockingPlaceholders": false,
+        "hasToolSpecificInstructions": false,
+        "emptySectionCount": 0
+      }
+    },
+    {
+      "fixture": "runtime-npm",
+      "profile": "standard",
+      "scoreTotal": 11,
+      "scoreThreshold": 8,
+      "precision": 1,
+      "precisionThreshold": 0.95,
+      "semantic": {
+        "h2HeadingsNormalized": [
+          "proposito del repositorio",
+          "tech stack",
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "how to work with ai agents",
+          "expanded definition of done",
+          "debug checklist",
+          "testing strategy",
+          "generic project execution playbook",
+          "do / don't",
+          "agent handoff template",
+          "seguridad"
+        ],
+        "requiredSectionsPresent": [
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "proposito del repositorio",
+          "seguridad",
+          "tech stack"
+        ],
+        "requiredSectionsMissing": [],
+        "canonicalCommands": [
+          "npm install"
+        ],
+        "canonicalCommandCount": 1,
+        "hasBlockingPlaceholders": false,
+        "hasToolSpecificInstructions": false,
+        "emptySectionCount": 0
+      }
+    },
+    {
+      "fixture": "vue-vite",
+      "profile": "compact",
+      "scoreTotal": 11,
+      "scoreThreshold": 7,
+      "precision": 1,
+      "precisionThreshold": 0.9,
+      "semantic": {
+        "h2HeadingsNormalized": [
+          "proposito del repositorio",
+          "tech stack",
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "testing guidelines",
+          "seguridad"
+        ],
+        "requiredSectionsPresent": [
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "proposito del repositorio",
+          "seguridad",
+          "tech stack"
+        ],
+        "requiredSectionsMissing": [],
+        "canonicalCommands": [
+          "npm install",
+          "npm run build",
+          "npm run dev",
+          "npm run lint",
+          "npm test"
+        ],
+        "canonicalCommandCount": 5,
+        "hasBlockingPlaceholders": false,
+        "hasToolSpecificInstructions": false,
+        "emptySectionCount": 0
+      }
+    },
+    {
+      "fixture": "vue-vite",
+      "profile": "full",
+      "scoreTotal": 11,
+      "scoreThreshold": 9,
+      "precision": 1,
+      "precisionThreshold": 0.95,
+      "semantic": {
+        "h2HeadingsNormalized": [
+          "proposito del repositorio",
+          "tech stack",
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "testing guidelines",
+          "how to work with ai agents",
+          "expanded definition of done",
+          "debug checklist",
+          "testing strategy",
+          "do / don't",
+          "agent handoff template",
+          "advanced agent protocol",
+          "seguridad"
+        ],
+        "requiredSectionsPresent": [
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "proposito del repositorio",
+          "seguridad",
+          "tech stack"
+        ],
+        "requiredSectionsMissing": [],
+        "canonicalCommands": [
+          "npm install",
+          "npm run build",
+          "npm run dev",
+          "npm run lint",
+          "npm test"
+        ],
+        "canonicalCommandCount": 5,
+        "hasBlockingPlaceholders": false,
+        "hasToolSpecificInstructions": false,
+        "emptySectionCount": 0
+      }
+    },
+    {
+      "fixture": "vue-vite",
+      "profile": "standard",
+      "scoreTotal": 11,
+      "scoreThreshold": 8,
+      "precision": 1,
+      "precisionThreshold": 0.95,
+      "semantic": {
+        "h2HeadingsNormalized": [
+          "proposito del repositorio",
+          "tech stack",
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "testing guidelines",
+          "how to work with ai agents",
+          "expanded definition of done",
+          "debug checklist",
+          "testing strategy",
+          "do / don't",
+          "agent handoff template",
+          "seguridad"
+        ],
+        "requiredSectionsPresent": [
+          "comandos canonicos",
+          "definition of done",
+          "estilo y convenciones",
+          "proposito del repositorio",
+          "seguridad",
+          "tech stack"
+        ],
+        "requiredSectionsMissing": [],
+        "canonicalCommands": [
+          "npm install",
+          "npm run build",
+          "npm run dev",
+          "npm run lint",
+          "npm test"
+        ],
+        "canonicalCommandCount": 5,
+        "hasBlockingPlaceholders": false,
+        "hasToolSpecificInstructions": false,
+        "emptySectionCount": 0
+      }
+    }
+  ]
+}

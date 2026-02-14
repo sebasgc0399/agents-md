@@ -149,6 +149,12 @@ npm run lint
 # Benchmark lite (P0 quality gate)
 npm run benchmark:lite
 
+# Benchmark P1 (semantic baseline + regression budget)
+npm run benchmark:p1
+
+# Regenerar baseline P1 (solo cuando el cambio es intencional)
+npm run benchmark:p1:update
+
 # Smoke del CLI compilado
 node dist/cli.js init --dry-run
 ```
@@ -174,6 +180,8 @@ Para mantener el proyecto de alta calidad y fácil de mantener, por favor:
 - Test: `npm test`
 - Coverage: `npm run test:coverage`
 - Benchmark lite: `npm run benchmark:lite`
+- Benchmark P1: `npm run benchmark:p1`
+- Update baseline P1: `npm run benchmark:p1:update`
 
 ## Soporte
 

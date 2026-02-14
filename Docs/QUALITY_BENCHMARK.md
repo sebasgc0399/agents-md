@@ -163,7 +163,36 @@ Politica de merge:
 - Si hay cambios intencionales de templates, se actualiza baseline/snapshot en el mismo PR con justificacion.
 - En P0, lineas/tokens no bloquean; solo emiten warning.
 
-## 8. Reporte minimo esperado del benchmark
+## 8. P1 nucleo (baseline semantico + regresion)
+
+Objetivo:
+
+- Versionar un baseline semantico por fixture/perfil.
+- Detectar drift semantico no intencional en CI.
+- Aplicar presupuesto de regresion de score (`actual >= baseline - 1`).
+
+Comandos P1:
+
+```bash
+npm run benchmark:p1
+npm run benchmark:p1:update
+```
+
+Reglas P1:
+
+- `benchmark:p1` compara la ejecucion actual contra `tests/benchmark/baselines/p1.semantic.json`.
+- Si hay drift semantico no aprobado, falla.
+- Si el score cae mas de 1 punto vs baseline, falla.
+- Si score/precision bajan de umbral de perfil, falla.
+- Lineas/tokens se mantienen en modo warning (no gate) en P1.
+
+Politica de baseline:
+
+- Si un cambio de templates/deteccion es intencional, ejecutar `npm run benchmark:p1:update`.
+- El diff del baseline debe incluirse en el mismo PR.
+- Si el cambio no es intencional, se corrige el codigo y no se actualiza baseline.
+
+## 9. Reporte minimo esperado del benchmark
 
 Salida sugerida por fixture/perfil:
 
