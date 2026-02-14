@@ -1,0 +1,174 @@
+# QUALITY Benchmark para AGENTS.md en agents-md
+
+## 1. Objetivo
+
+Definir un benchmark reproducible para medir calidad del `AGENTS.md` generado por `agents-md` y usarlo como gate de regresion en PRs.
+
+Principios:
+
+- Sin dependencias nuevas (solo Node.js + scripts del repo).
+- Salida determinista para mismo input.
+- Validacion basada en reglas medibles, no en opinion.
+- Lenguaje neutral (sin instrucciones tool-specific).
+
+## 2. Rubrica de calidad (11 pts)
+
+Escala por criterio:
+
+- `2`: cumple completo.
+- `1`: cumple parcial.
+- `0`: no cumple.
+
+Excepcion:
+
+- `Determinismo y estabilidad` usa escala `1/0`.
+
+| Criterio | Definicion operativa | Peso | % del total |
+|---|---|---:|---:|
+| Claridad y estructura | Tiene secciones minimas, encabezados claros y orden consistente. | 2 | 18.18% |
+| Accionabilidad | Las instrucciones son ejecutables y con sintaxis valida. | 2 | 18.18% |
+| Exactitud | Comandos/rutas existen en el proyecto o en una allowlist valida. | 2 | 18.18% |
+| Concision y densidad | Sin relleno; detalle progresivo por perfil. | 2 | 18.18% |
+| Compatibilidad multi-herramienta | No contiene instrucciones dependientes de una herramienta especifica. | 2 | 18.18% |
+| Determinismo y estabilidad | Dos corridas iguales producen salida identica. | 1 | 9.09% |
+
+Definicion de lock-in:
+
+- Se considera lock-in cualquier instruccion que dependa de una herramienta concreta.
+- Ejemplos bloqueantes: "abre Cursor", "en Claude Code haz X", "usa Windsurf Rules".
+- Menciones neutrales de contexto/compatibilidad no cuentan como lock-in.
+
+Formula:
+
+- `score_total = suma de puntos (0..11)`
+- `score_pct = (score_total / 11) * 100`
+
+Regla de regresion:
+
+- No se permite una caida mayor a `-1.0` punto contra baseline por fixture/perfil.
+
+## 3. Metricas objetivo por perfil
+
+Basado en limites actuales de `src/render/validators.ts`.
+
+| Metrica | compact | standard | full | Modo |
+|---|---:|---:|---:|---|
+| Score minimo de rubrica | `>= 7/11` | `>= 8/11` | `>= 9/11` | Gate P0 |
+| Lineas objetivo | `50..110` | `150..230` | `220..360` | Warn P0 / Gate P1 opcional |
+| Tokens maximos | `<= 900` | `<= 1600` | `<= 2400` | Warn P0 / Gate P1 opcional |
+| Placeholders bloqueantes (`undefined`, `null`) | `0` | `0` | `0` | Gate P0 |
+| Placeholders adicionales (`N/A`, `TBD`) | Warn | Warn | Warn | Warn P0 / Gate P1 opcional |
+| Secciones vacias (`##`) | `0` | `0` | `0` | Gate P0 |
+| Precision de comandos | `>= 90%` | `>= 95%` | `>= 95%` | Gate P0 |
+| Instrucciones tool-specific (lock-in) | `0` | `0` | `0` | Gate P0 |
+| Determinismo (hash run1 == run2) | `100% fixtures` | `100% fixtures` | `100% fixtures` | Gate P0 |
+
+## 4. Extraccion de comandos (benchmark)
+
+Regla de extraccion:
+
+- El benchmark busca comandos solo bajo `## Comandos canonicos`.
+- Se consideran comandos las lineas de lista con inline code (backticks).
+- Bloques de ejemplo fuera de esa seccion no computan para precision.
+
+Regla de validacion:
+
+- Un comando es valido si:
+  - coincide con un script real de `package.json` (normalizado por package manager), o
+  - pertenece a la allowlist documentada.
+
+Caso sin comandos:
+
+- Si no se detecta ningun comando en `## Comandos canonicos`, falla `Accionabilidad`.
+
+Definicion de precision de comandos:
+
+- Numerador: comandos validos detectados.
+- Denominador: total de comandos detectados en `## Comandos canonicos`.
+
+Allowlist inicial (minima):
+
+- `npm install`, `npm ci`
+- `pnpm install`, `yarn install`, `bun install`
+- `node --version` (solo si se usa como verificacion de runtime)
+- `firebase deploy --only functions` (solo para fixtures detectados como Firebase Functions)
+
+## 5. Fixtures para benchmark
+
+Fixtures existentes (hoy):
+
+- `tests/fixtures/react-vite`
+- `tests/fixtures/vue-vite`
+- `tests/fixtures/runtime-npm`
+- `tests/fixtures/firebase-with-functions`
+- `tests/fixtures/monorepo-turbo`
+- `tests/fixtures/monorepo-pnpm-workspace`
+
+Fixtures target (Issue 7):
+
+- Nuevos fixtures sinteticos para casos edge (sin scripts, monorepo edge, deteccion ambigua).
+
+Perfiles a evaluar por fixture:
+
+- `compact`
+- `standard`
+- `full`
+
+## 6. Como correr benchmark local (modo lite)
+
+### 6.1 Flujo minimo hoy (sin harness nuevo)
+
+```bash
+npm run build
+npm test
+node dist/cli.js init tests/fixtures/react-vite --dry-run --profile compact
+```
+
+### 6.2 Flujo recomendado P0 (harness lite)
+
+Objetivo: agregar script `scripts/benchmark/lite.mjs` (Node built-in) para automatizar:
+
+1. Generar salida para cada fixture/perfil.
+2. Repetir generacion 2 veces y comparar hash (determinismo).
+3. Verificar secciones minimas y placeholders.
+4. Verificar precision de comandos contra `package.json`.
+5. Calcular score de rubrica y validar umbrales por perfil.
+6. Reportar lineas/tokens como warning en P0.
+
+Comando objetivo:
+
+```bash
+npm run build
+npm run benchmark:lite
+```
+
+## 7. CI (modo lite)
+
+Agregar step en `.github/workflows/ci.yml` sin dependencias nuevas:
+
+```yaml
+- name: Build
+  run: npm run build
+
+- name: Test
+  run: npm test
+
+- name: Quality benchmark lite
+  run: npm run benchmark:lite
+```
+
+Politica de merge:
+
+- Si falla benchmark lite en reglas Gate P0, el PR no mergea.
+- Si hay cambios intencionales de templates, se actualiza baseline/snapshot en el mismo PR con justificacion.
+- En P0, lineas/tokens no bloquean; solo emiten warning.
+
+## 8. Reporte minimo esperado del benchmark
+
+Salida sugerida por fixture/perfil:
+
+- `score_total` y `score_pct`
+- resultado de determinismo (`pass/fail`)
+- precision de comandos (`x/y`, `%`)
+- warnings de lineas/tokens
+- hallazgos bloqueantes (`undefined`, `null`, secciones vacias, lock-in)

@@ -24,6 +24,7 @@
   },
   "scripts": {
     "build": "tsc && npm run copy-templates",
+    "benchmark:lite": "node scripts/benchmark/lite.mjs",
     "copy-templates": "node -e \"require('fs').cpSync('src/templates', 'dist/templates', {recursive: true})\"",
     "dev": "tsc --watch",
     "start": "node dist/cli.js",

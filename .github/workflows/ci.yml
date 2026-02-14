@@ -38,5 +38,8 @@ jobs:
       - name: Test coverage
         run: npm run test:coverage
 
+      - name: Benchmark lite
+        run: npm run benchmark:lite
+
       - name: Package smoke check
         run: npm pack --dry-run

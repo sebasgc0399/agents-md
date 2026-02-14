@@ -9,7 +9,8 @@ import { detectBuildTools } from '../detect/framework-detector.js';
  * Default values when data is missing
  */
 const DEFAULTS = {
-  project_description: '<!-- TODO: Add project description -->',
+  project_description:
+    'Proyecto sin descripcion en package.json. Definir objetivo y alcance antes de cambios amplios.',
 
   style_notes:
     '- Seguir convenciones del framework\n' +

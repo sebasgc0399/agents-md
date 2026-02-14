@@ -146,6 +146,9 @@ npm run test:coverage
 # Lint (verificar tipos)
 npm run lint
 
+# Benchmark lite (P0 quality gate)
+npm run benchmark:lite
+
 # Smoke del CLI compilado
 node dist/cli.js init --dry-run
 ```
@@ -170,6 +173,7 @@ Para mantener el proyecto de alta calidad y fácil de mantener, por favor:
 - Build: `npm run build`
 - Test: `npm test`
 - Coverage: `npm run test:coverage`
+- Benchmark lite: `npm run benchmark:lite`
 
 ## Soporte
 
