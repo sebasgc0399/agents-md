@@ -18,6 +18,7 @@ export default defineConfig({
         'node_modules/',
         'dist/',
         'scripts/benchmark/',
+        'scripts/coverage/',
         'tests/fixtures/',
         '**/*.test.ts',
         'vitest.config.ts',

@@ -225,17 +225,20 @@ Asserts estables recomendados (sin snapshots gigantes):
 
 - Contexto: la cobertura global oculta deficits en archivos clave de decision.
 - Alcance minimo:
-  - Definir targets de branches por carpeta critica en CI.
-  - Reporte visible en PR (detect/render/validators/utils).
+  - Implementar `scripts/coverage/p0-report.mjs` para reportar coverage de ramas por carpeta y por target P0.
+  - Agregar script npm `coverage:p0:report`.
+  - Publicar reporte visible en PR como `GITHUB_STEP_SUMMARY` + artifact JSON/MD.
 - DoD:
-  - El PR reporta desvios de metas P0 sin bloqueo.
+  - El PR reporta desvios de metas P0 como `WARN` sin bloqueo.
   - Targets y excepciones documentadas en `Docs/TEST_STRATEGY.md`.
 - Tests esperados:
-  - Corrida positiva con baseline actual mejorado.
-  - Corrida negativa local/CI simulando regresion de branches.
+  - Test e2e del script con coverage real/sintetica y salida de reportes.
+  - Corrida negativa en `--strict` simulando regresion de branches.
+  - Test de normalizacion de paths Windows/Linux.
 - Comandos de verificacion:
   - `npm run build`
   - `npm test`
+  - `npm run coverage:p0:report`
   - `(si aplica) node dist/cli.js init tests/fixtures/react-vite --dry-run --profile compact`
 
 ### P1 (consolidacion)

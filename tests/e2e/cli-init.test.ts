@@ -40,9 +40,46 @@ function cleanupTempDirs(): void {
   }
 }
 
+function normalizeVersionPrefix(version: string): string {
+  return version.trim().replace(/^v/, '');
+}
+
 describe('CLI init --dry-run', () => {
   afterEach(() => {
     cleanupTempDirs();
+  });
+
+  it('prints root help with init command', () => {
+    const cliPath = path.join(repoRoot, 'dist', 'cli.js');
+
+    const result = spawnSync(
+      process.execPath,
+      [cliPath, '--help'],
+      {
+        encoding: 'utf-8',
+      }
+    );
+
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain('init');
+  });
+
+  it('prints init help with stable flags', () => {
+    const cliPath = path.join(repoRoot, 'dist', 'cli.js');
+
+    const result = spawnSync(
+      process.execPath,
+      [cliPath, 'init', '--help'],
+      {
+        encoding: 'utf-8',
+      }
+    );
+
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain('--dry-run');
+    expect(result.stdout).toContain('--profile');
+    expect(result.stdout).toContain('--force');
+    expect(result.stdout).toContain('--out');
   });
 
   it('renders AGENTS.md for the react-vite fixture', () => {
@@ -113,6 +150,22 @@ describe('CLI init --dry-run', () => {
 
     expect(result.status).not.toBe(0);
     expect(result.stderr).toContain('Output path must be within the project directory');
+  });
+
+  it('fails with invalid profile in dry-run mode', () => {
+    const cliPath = path.join(repoRoot, 'dist', 'cli.js');
+    const fixturePath = path.join(repoRoot, 'tests', 'fixtures', 'react-vite');
+
+    const result = spawnSync(
+      process.execPath,
+      [cliPath, 'init', fixturePath, '--dry-run', '--profile', 'invalid'],
+      {
+        encoding: 'utf-8',
+      }
+    );
+
+    expect(result.status).not.toBe(0);
+    expect(result.stderr).toContain('Invalid profile');
   });
 
   it('fails when AGENTS.md exists and --force is not provided', () => {
@@ -188,7 +241,9 @@ describe('CLI init --dry-run', () => {
       }
     );
 
+    const stdoutVersion = result.stdout.trim();
     expect(result.status).toBe(0);
-    expect(result.stdout.trim()).toBe(packageJson.version);
+    expect(stdoutVersion).toMatch(/^v?\d+\.\d+\.\d+/);
+    expect(normalizeVersionPrefix(stdoutVersion)).toBe(packageJson.version);
   });
 });
