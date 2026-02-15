@@ -2,6 +2,8 @@
 
 [![npm version](https://img.shields.io/npm/v/%40sebasgc0399%2Fagents-md?label=npm)](https://www.npmjs.com/package/@sebasgc0399/agents-md)
 [![npm downloads](https://img.shields.io/npm/dm/%40sebasgc0399%2Fagents-md?label=downloads)](https://www.npmjs.com/package/@sebasgc0399/agents-md)
+[![release](https://img.shields.io/github/v/release/sebasgc0399/agents-md?label=release)](https://github.com/sebasgc0399/agents-md/releases/latest)
+[![license](https://img.shields.io/github/license/sebasgc0399/agents-md?label=license)](https://github.com/sebasgc0399/agents-md/blob/main/LICENSE)
 
 CLI para generar archivos `AGENTS.md` automaticamente para proyectos Node.js.
 
