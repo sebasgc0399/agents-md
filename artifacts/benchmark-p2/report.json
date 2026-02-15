@@ -1,6 +1,6 @@
 {
   "mode": "p2",
-  "generatedAt": "2026-02-15T20:35:11.366Z",
+  "generatedAt": "2026-02-15T21:34:43.041Z",
   "context": {
     "repository": null,
     "fixtures": [
@@ -50,8 +50,8 @@
     }
   },
   "issues": {
-    "status": "disabled",
-    "reason": "disabled_by_flag",
+    "status": "skipped",
+    "reason": "missing_repo",
     "labels": {}
   },
   "alerts": []
