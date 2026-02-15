@@ -1,6 +1,6 @@
 # Benchmark P2 Trends Report
 
-Generated at: 2026-02-15T19:33:17.479Z
+Generated at: 2026-02-15T20:35:11.366Z
 Repository: n/a
 Fixtures: react-vite, vue-vite, runtime-npm, firebase-with-functions, monorepo-turbo, monorepo-pnpm-workspace
 Profiles: compact, standard, full

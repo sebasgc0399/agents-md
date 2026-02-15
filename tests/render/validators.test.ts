@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { validateOutput } from '../../src/render/validators.js';
+import { estimateTokens } from '../../src/utils/token-counter.js';
 
 describe('validateOutput', () => {
   it('counts lines without trailing newline off-by-one', () => {
@@ -227,4 +228,85 @@ describe('validateOutput', () => {
     expect(result.lineCount).toBe(1);
     expect(result.valid).toBe(true);
   });
+
+  // --- Boundary tests: standard profile ---
+
+  it('warns when standard exceeds targetMaxLines (190)', () => {
+    const content = buildContentWithLines(195);
+    expect(content.split('\n').length).toBe(195);
+    const result = validateOutput(content, 'standard');
+
+    expect(result.warnings.some(w => w.includes('too long'))).toBe(true);
+  });
+
+  it('warns [BREACH] when standard exceeds toleratedMaxLines (209)', () => {
+    const content = buildContentWithLines(215);
+    const result = validateOutput(content, 'standard');
+
+    expect(
+      result.warnings.some(w =>
+        w.includes('[BREACH] Line count outside tolerated range for standard')
+      )
+    ).toBe(true);
+  });
+
+  it('warns when standard tokens exceed targetMaxTokens (1700)', () => {
+    const content = buildContentAboveTokens(1700);
+    expect(estimateTokens(content)).toBeGreaterThan(1700);
+    const result = validateOutput(content, 'standard');
+
+    expect(result.warnings.some(w => w.includes('exceeds budget'))).toBe(true);
+  });
+
+  // --- Boundary tests: full profile ---
+
+  it('warns when full exceeds targetMaxLines (280)', () => {
+    const content = buildContentWithLines(285);
+    const result = validateOutput(content, 'full');
+
+    expect(result.warnings.some(w => w.includes('too long'))).toBe(true);
+  });
+
+  it('warns [BREACH] when full exceeds toleratedMaxLines (308)', () => {
+    const content = buildContentWithLines(315);
+    const result = validateOutput(content, 'full');
+
+    expect(
+      result.warnings.some(w =>
+        w.includes('[BREACH] Line count outside tolerated range for full')
+      )
+    ).toBe(true);
+  });
+
+  it('warns when full tokens below targetMinTokens (1650)', () => {
+    const content = buildContentBelowTokens(1650);
+    expect(estimateTokens(content)).toBeLessThan(1650);
+    const result = validateOutput(content, 'full');
+
+    expect(result.warnings.some(w => w.startsWith('Only '))).toBe(true);
+  });
 });
+
+// --- Helpers: build content deterministically via estimateTokens ---
+
+function buildContentWithLines(targetLines: number): string {
+  return Array.from({ length: targetLines }, (_, i) => `Line ${i + 1} content`).join('\n');
+}
+
+function buildContentAboveTokens(targetTokens: number): string {
+  const baseUnit = 'word ';
+  let content = '';
+  while (estimateTokens(content) <= targetTokens) {
+    content += baseUnit;
+  }
+  return content;
+}
+
+function buildContentBelowTokens(targetTokens: number): string {
+  const baseUnit = 'word ';
+  let content = baseUnit.repeat(Math.ceil(targetTokens));
+  while (estimateTokens(content) >= targetTokens) {
+    content = content.slice(0, -baseUnit.length);
+  }
+  return content;
+}

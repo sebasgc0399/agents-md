@@ -1,6 +1,6 @@
 {
   "mode": "p2",
-  "generatedAt": "2026-02-15T19:33:17.479Z",
+  "generatedAt": "2026-02-15T20:35:11.366Z",
   "context": {
     "repository": null,
     "fixtures": [
@@ -17,7 +17,7 @@
       "full"
     ],
     "windowDays": 28,
-    "baselinePath": "D:\\Proyectos VS CODE\\AGENTS_MD\\agents-md\\tests\\benchmark\\baselines\\p1.semantic.json"
+    "baselinePath": "tests/benchmark/baselines/p1.semantic.json"
   },
   "benchmark": {
     "p1": {
