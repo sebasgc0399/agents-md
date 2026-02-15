@@ -54,7 +54,7 @@ describe('directoryExists', () => {
     fs.mkdirSync(targetDir, { recursive: true });
 
     const originalStatSync = fs.statSync.bind(fs);
-    vi.spyOn(fs, 'statSync').mockImplementation((p: fs.PathLike, options?: { bigint?: false }) => {
+    vi.spyOn(fs, 'statSync').mockImplementation((p: fs.PathLike, options?: fs.StatSyncOptions) => {
       const resolved = path.resolve(String(p));
       if (resolved === path.resolve(targetDir)) {
         throw new Error('forced directory stat failure');
@@ -73,7 +73,7 @@ describe('fileExists', () => {
     fs.writeFileSync(targetFile, 'ok', 'utf-8');
 
     const originalStatSync = fs.statSync.bind(fs);
-    vi.spyOn(fs, 'statSync').mockImplementation((p: fs.PathLike, options?: { bigint?: false }) => {
+    vi.spyOn(fs, 'statSync').mockImplementation((p: fs.PathLike, options?: fs.StatSyncOptions) => {
       const resolved = path.resolve(String(p));
       if (resolved === path.resolve(targetFile)) {
         throw new Error('forced file stat failure');

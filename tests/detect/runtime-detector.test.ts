@@ -67,7 +67,7 @@ describe('detectRuntime', () => {
       name: 'partial-runtime-info',
       scripts: {},
       engines: { node: '>=18.0.0' },
-    } as PackageInfo;
+    } as unknown as PackageInfo;
 
     const runtime = detectRuntime(rootPath, packageInfo);
 
