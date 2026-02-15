@@ -54,8 +54,9 @@ Basado en limites actuales de `src/render/validators.ts`.
 | Metrica | compact | standard | full | Modo |
 |---|---:|---:|---:|---|
 | Score minimo de rubrica | `>= 7/11` | `>= 8/11` | `>= 9/11` | Gate P0 |
-| Lineas objetivo | `50..110` | `150..230` | `220..360` | Warn P0 / Gate P1 opcional |
-| Tokens maximos | `<= 900` | `<= 1600` | `<= 2400` | Warn P0 / Gate P1 opcional |
+| Lineas objetivo | `30..90` | `130..190` | `200..280` | Warn P0 / Gate P1 opcional |
+| Tokens objetivo | `250..700` | `1050..1700` | `1700..2600` | Warn P0 / Gate P1 opcional |
+| Tolerancia efectiva (+-10%) | `27..99` lineas / `225..770` tokens | `117..209` lineas / `945..1870` tokens | `180..308` lineas / `1530..2860` tokens | BREACH reportado (P0 no bloqueante) |
 | Placeholders bloqueantes (`undefined`, `null`) | `0` | `0` | `0` | Gate P0 |
 | Placeholders adicionales (`N/A`, `TBD`) | Warn | Warn | Warn | Warn P0 / Gate P1 opcional |
 | Secciones vacias (`##`) | `0` | `0` | `0` | Gate P0 |
@@ -122,6 +123,7 @@ Perfiles a evaluar por fixture:
 npm run build
 npm test
 node dist/cli.js init tests/fixtures/react-vite --dry-run --profile compact
+npm run benchmark:limits
 ```
 
 ### 6.2 Flujo recomendado P0 (harness lite)

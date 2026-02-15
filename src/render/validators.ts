@@ -7,27 +7,46 @@ import { estimateTokens } from '../utils/token-counter.js';
 
 const PROFILE_LIMITS: Record<
   Profile,
-  { minLines: number; maxLines: number; minTokens: number; maxTokens: number }
+  {
+    targetMinLines: number;
+    targetMaxLines: number;
+    targetMinTokens: number;
+    targetMaxTokens: number;
+    tolerancePct: number;
+  }
 > = {
   compact: {
-    minLines: 50,
-    maxLines: 110,
-    minTokens: 0,
-    maxTokens: 900,
+    targetMinLines: 30,
+    targetMaxLines: 90,
+    targetMinTokens: 250,
+    targetMaxTokens: 700,
+    tolerancePct: 0.1,
   },
   standard: {
-    minLines: 150,
-    maxLines: 230,
-    minTokens: 0,
-    maxTokens: 1600,
+    targetMinLines: 130,
+    targetMaxLines: 190,
+    targetMinTokens: 1050,
+    targetMaxTokens: 1700,
+    tolerancePct: 0.1,
   },
   full: {
-    minLines: 220,
-    maxLines: 360,
-    minTokens: 0,
-    maxTokens: 2400,
+    targetMinLines: 200,
+    targetMaxLines: 280,
+    targetMinTokens: 1700,
+    targetMaxTokens: 2600,
+    tolerancePct: 0.1,
   },
 };
+
+function getToleratedBounds(min: number, max: number, tolerancePct: number): {
+  min: number;
+  max: number;
+} {
+  return {
+    min: Math.floor(min * (1 - tolerancePct)),
+    max: Math.ceil(max * (1 + tolerancePct)),
+  };
+}
 
 /**
  * Validate generated AGENTS.md content
@@ -40,35 +59,59 @@ export function validateOutput(
   const normalizedForCount = normalized.replace(/\n+$/g, '');
   const lines = normalizedForCount.length ? normalizedForCount.split('\n') : [''];
   const lineCount = lines.length;
-  const estimatedTokens = estimateTokens(normalized);
+  const estimatedTokens = estimateTokens(normalizedForCount);
   const limits = PROFILE_LIMITS[profile];
+  const toleratedLines = getToleratedBounds(
+    limits.targetMinLines,
+    limits.targetMaxLines,
+    limits.tolerancePct
+  );
+  const toleratedTokens = getToleratedBounds(
+    limits.targetMinTokens,
+    limits.targetMaxTokens,
+    limits.tolerancePct
+  );
 
   const warnings: string[] = [];
   const errors: string[] = [];
 
   // Line count validation (profile-specific targets)
-  if (lineCount < limits.minLines) {
+  if (lineCount < limits.targetMinLines) {
     warnings.push(
       `Output is quite short (${lineCount} lines). Target for ${profile}: ` +
-        `${limits.minLines}-${limits.maxLines} lines.`
+        `${limits.targetMinLines}-${limits.targetMaxLines} lines.`
     );
-  } else if (lineCount > limits.maxLines) {
+  } else if (lineCount > limits.targetMaxLines) {
     warnings.push(
       `Output is too long (${lineCount} lines). Target for ${profile}: ` +
-        `${limits.minLines}-${limits.maxLines} lines.`
+        `${limits.targetMinLines}-${limits.targetMaxLines} lines.`
+    );
+  }
+
+  if (lineCount < toleratedLines.min || lineCount > toleratedLines.max) {
+    warnings.push(
+      `[BREACH] Line count outside tolerated range for ${profile} (` +
+        `${toleratedLines.min}-${toleratedLines.max} lines).`
     );
   }
 
   // Token count validation (profile-specific targets)
-  if (limits.minTokens > 0 && estimatedTokens < limits.minTokens) {
+  if (estimatedTokens < limits.targetMinTokens) {
     warnings.push(
       `Only ${estimatedTokens} tokens (target for ${profile}: ` +
-        `${limits.minTokens}-${limits.maxTokens}). Consider adding more details.`
+        `${limits.targetMinTokens}-${limits.targetMaxTokens}). Consider adding more details.`
     );
-  } else if (estimatedTokens > limits.maxTokens) {
+  } else if (estimatedTokens > limits.targetMaxTokens) {
     warnings.push(
-      `${estimatedTokens} tokens exceeds budget for ${profile} (max: ${limits.maxTokens}). ` +
+      `${estimatedTokens} tokens exceeds budget for ${profile} (max: ${limits.targetMaxTokens}). ` +
         'AI agents may not process it efficiently.'
+    );
+  }
+
+  if (estimatedTokens < toleratedTokens.min || estimatedTokens > toleratedTokens.max) {
+    warnings.push(
+      `[BREACH] Token count outside tolerated range for ${profile} (` +
+        `${toleratedTokens.min}-${toleratedTokens.max} tokens).`
     );
   }
 

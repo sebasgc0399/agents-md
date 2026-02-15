@@ -24,6 +24,7 @@
   },
   "scripts": {
     "build": "tsc && npm run copy-templates",
+    "benchmark:limits": "node scripts/benchmark/profile-limits.mjs",
     "benchmark:lite": "node scripts/benchmark/lite.mjs",
     "benchmark:p1": "node scripts/benchmark/p1.mjs",
     "benchmark:p1:update": "node scripts/benchmark/p1.mjs --update-baseline",
@@ -66,6 +67,7 @@
     "@types/mustache": "^4.2.5",
     "@types/node": "^20.10.0",
     "@vitest/coverage-v8": "^1.1.0",
+    "js-tiktoken": "^1.0.21",
     "release-it": "^19.2.4",
     "tsx": "^4.21.0",
     "typescript": "^5.3.3",

@@ -2,8 +2,6 @@ import { describe, it, expect } from 'vitest';
 import { validateOutput } from '../../src/render/validators.js';
 
 describe('validateOutput', () => {
-  // NOTE: The branch `limits.minTokens > 0 && estimatedTokens < minTokens`
-  // is currently inactive because all profiles set minTokens=0 by design.
   it('counts lines without trailing newline off-by-one', () => {
     const result = validateOutput('a\nb\n');
 
@@ -121,11 +119,40 @@ describe('validateOutput', () => {
   });
 
   it('warns when token count exceeds profile budget', () => {
-    const content = `# AGENTS\n\n${'a'.repeat(4000)}`;
+    const content = `# AGENTS\n\n${'a'.repeat(20000)}`;
     const result = validateOutput(content, 'compact');
 
     expect(
       result.warnings.some(w => w.includes('exceeds budget for compact'))
+    ).toBe(true);
+  });
+
+  it('keeps estimatedTokens stable when content only differs by trailing newlines', () => {
+    const base = '# AGENTS\n\nToken baseline text';
+    const withoutTrailing = validateOutput(base, 'compact');
+    const withTrailing = validateOutput(`${base}\n\n\n`, 'compact');
+
+    expect(withTrailing.estimatedTokens).toBe(withoutTrailing.estimatedTokens);
+  });
+
+  it('reports line breach when compact output is outside tolerated range', () => {
+    const result = validateOutput('# AGENTS', 'compact');
+
+    expect(
+      result.warnings.some(w =>
+        w.includes('[BREACH] Line count outside tolerated range for compact')
+      )
+    ).toBe(true);
+  });
+
+  it('reports token breach when compact output is outside tolerated range', () => {
+    const content = `# AGENTS\n\n${'a'.repeat(5000)}`;
+    const result = validateOutput(content, 'compact');
+
+    expect(
+      result.warnings.some(w =>
+        w.includes('[BREACH] Token count outside tolerated range for compact')
+      )
     ).toBe(true);
   });
 
