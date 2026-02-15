@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.2](https://github.com/sebasgc0399/agents-md/compare/v0.2.1...v0.2.2) (2026-02-15)
+
+### Bug Fixes
+
+* update release badge to include cacheSeconds for improved performance ([e933265](https://github.com/sebasgc0399/agents-md/commit/e933265d2a7194d4563dc4d02ba7a260820f92cf))
+
 ## 0.2.0 (2026-02-14)
 
 ### Features
