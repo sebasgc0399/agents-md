@@ -1,109 +1,120 @@
-# Framework Detection (P0)
+# Contrato de Detección de Frameworks (P0 Cerrado)
 
-## Objetivo
-Detectar framework de forma determinista con:
+## Propósito
+Este documento es la fuente única de verdad para el comportamiento de detección de frameworks en `agents-md`.
 
-- Inputs limitados a `package.json` y `existsSync` en paths conocidos.
-- Scoring reproducible por señales (`Strong/Medium/Weak`).
-- Guardas anti-falsos-positivos para frameworks nuevos P0.
-- Precedencia fija para casos ambiguos.
-- Política `precision-first`: si no hay evidencia suficiente, devolver `unknown`.
+Objetivos:
+- Detección determinista a partir de `package.json` + `existsSync` en rutas conocidas.
+- Clasificación con prioridad en precisión (`unknown` cuando la evidencia es insuficiente).
+- Fuertes protecciones anti-falsos-positivos para nuevos frameworks P0:
+`angular`, `sveltekit`, `astro`, `nestjs`.
+- Compatibilidad retroactiva con fixtures existentes (`framework.type` no debe cambiar).
 
-## Inputs permitidos y determinismo
+## Entradas Permitidas y Determinismo
 
-### Inputs
+### Entradas permitidas
 - `package.json`:
 - `dependencies`
 - `devDependencies`
 - `scripts`
-- `existsSync` en paths fijos:
-- Config files (`angular.json`, `svelte.config.js`, `astro.config.*`, `nest-cli.json`, etc.)
-- Carpetas puntuales (`pages/`, `functions/`)
+- `existsSync` solo en rutas fijas:
+- archivos como `angular.json`, `svelte.config.js`, `astro.config.*`, `nest-cli.json`, `next.config.*`, `nuxt.config.*`, `firebase.json`
+- directorios como `pages/`, `functions/`
 
-### Restricciones
-- No lectura profunda de contenido de archivos.
-- No ejecución de CLIs externas.
-- No glob/readdir no ordenado.
-- Orden estable en evaluación de frameworks y señales.
-- Scripts evaluados en orden de claves ordenadas (`sort()`).
+### No permitido
+- Análisis profundo del contenido de archivos fuente/configuración.
+- Ejecutar CLIs de frameworks durante la detección.
+- Escaneos de directorios no ordenados para decisiones de detección.
 
-## Contrato de API
+### Requisitos de determinismo
+- Orden de evaluación de frameworks estable.
+- Orden de evaluación de señales estable por framework.
+- Escaneo de scripts sobre claves de scripts ordenadas.
+
+## Contrato de API Pública
 
 `detectFramework(packageInfo, rootPathOrOptions?: string | { rootPath?: string })`
 
-- Con `rootPath`: detector completo (incluye señales de filesystem).
-- Sin `rootPath`: modo conservador; frameworks config-strict pueden devolver `unknown`.
+- Con `rootPath`: detector completo (señales de paquete + sistema de archivos).
+- Sin `rootPath`: modo conservador (frameworks que requieren config pueden permanecer `unknown`).
 
-`detectProject()` siempre pasa `rootPath`, por lo que el CLI usa la detección completa.
+`detectProject()` siempre proporciona `rootPath`.
 
-## Modelo de confianza y clasificación
+## Modelo de Confianza y Clasificación
 
-- Pesos:
+### Pesos
 - `Strong = 3`
 - `Medium = 1`
 - `Weak = 0.5`
 
-- Umbrales:
+### Umbrales
 - `High >= 4`
 - `Medium >= 3`
 - `Low >= 1`
 
-- Clasificación (`precision-first`):
-- Se clasifica framework solo con `score >= 3` y guarda aprobada.
-- Si no alcanza piso o falla guarda: `unknown`.
-- Framework clasificado expone `confidence: medium|high`.
-- `unknown` expone `confidence: low`.
+### Piso de clasificación (prioridad en precisión)
+- Un framework se clasifica solo si:
+- `score >= 3`
+- la guarda del framework pasa (si está definida)
+- En caso contrario, el resultado es `unknown`.
 
-## Matriz de señales y guardas
+### Contrato de salida de confianza
+- Framework clasificado: `medium` o `high`.
+- `unknown`: `low`.
 
-| Framework | Señales | Guarda anti-FP |
+## Matriz de Señales y Guardas
+
+| Framework | Señales | Guarda |
 |---|---|---|
-| `react` (legacy-compat) | Strong: `react`, `react-dom`; Medium: `react-scripts`, script con `react-scripts`; Weak: `src/App.*` | Sin guarda fuerte en P0 (limitación legacy) |
-| `next` | Strong: dep `next`, `next.config.*`; Medium: script `next dev`, dir `pages/` | Precedencia `next > react` |
-| `vue` (legacy-compat) | Strong: dep `vue`; Medium: `@vue/cli-service`, script `vue-cli-service`; Weak: `vue.config.*` | Sin guarda fuerte en P0 (limitación legacy) |
-| `nuxt` | Strong: dep `nuxt`, `nuxt.config.*`; Medium: script `nuxt dev` | Precedencia `nuxt > vue` |
-| `angular` | Strong: `angular.json`, dep `@angular/core`, dep `@angular/cli`; Medium: scripts `ng serve`, `ng build` | Requiere `angular.json` OR (`@angular/core` AND `@angular/cli`) |
+| `react` (compat-legacy) | Strong: `react`, `react-dom`; Medium: `react-scripts`, script con `react-scripts`; Weak: `src/App.*` | Sin guarda anti-FP fuerte en P0 |
+| `next` | Strong: dep `next`, `next.config.*`; Medium: script `next dev`, directorio `pages/` | Precedencia sobre `react` solo en empate |
+| `vue` (compat-legacy) | Strong: dep `vue`; Medium: `@vue/cli-service`, script con `vue-cli-service`; Weak: `vue.config.*` | Sin guarda anti-FP fuerte en P0 |
+| `nuxt` | Strong: dep `nuxt`, `nuxt.config.*`; Medium: script `nuxt dev` | Precedencia sobre `vue` solo en empate |
+| `angular` | Strong: `angular.json`, dep `@angular/core`, dep `@angular/cli`; Medium: scripts `ng serve`, `ng build` | Requiere `angular.json` O (`@angular/core` Y `@angular/cli`) |
 | `sveltekit` | Strong: `svelte.config.js`, dep `@sveltejs/kit`, dep `svelte`; Medium: script `svelte-kit dev` | Requiere `svelte.config.js` |
-| `astro` | Strong: `astro.config.(mjs|js|ts)`, dep `astro`; Medium: script `astro dev` | Requiere config Astro y dep `astro` |
+| `astro` | Strong: `astro.config.(mjs|js|ts)`, dep `astro`; Medium: script `astro dev` | Requiere config + dep `astro` |
 | `nestjs` | Strong: `nest-cli.json`, deps `@nestjs/core/@nestjs/common/@nestjs/cli`; Medium: script `nest start` | Requiere `nest-cli.json` |
-| `svelte` | Strong: dep `svelte`; Medium: scripts con `svelte` | Precedencia `sveltekit > svelte` |
-| `firebase-functions` | Strong: dep `firebase-functions`; Medium: `firebase.json`, dir `functions/` | En `detectProject`: sin `functions/` => `unknown` |
-| `express` (legacy-compat) | Strong: dep `express` | Sin guarda fuerte en P0 (limitación legacy) |
-| `fastify` (legacy-compat) | Strong: dep `fastify` | Sin guarda fuerte en P0 (limitación legacy) |
+| `svelte` | Strong: dep `svelte`; Medium: scripts con `svelte` | Requiere `svelte.config.js`; precedencia de `sveltekit` solo en empate |
+| `firebase-functions` | Strong: dep `firebase-functions`; Medium: `firebase.json`, directorio `functions/` | Verificación adicional a nivel de proyecto: si falta `functions/` => `unknown` |
+| `express` (compat-legacy) | Strong: dep `express` | Sin guarda anti-FP fuerte en P0 |
+| `fastify` (compat-legacy) | Strong: dep `fastify` | Sin guarda anti-FP fuerte en P0 |
 
-## Precedencia y empates
+## Contrato de Precedencia (Solo Desempate)
 
-Reglas fijas:
-
+### Reglas
 - `next > react`
 - `nuxt > vue`
 - `sveltekit > svelte`
-- `express > fastify` (compatibilidad con fixtures actuales)
+- `express > fastify`
 
-Si hay empate por score y ninguna regla deja un ganador único: `unknown`.
+### Flujo de selección requerido
+1. Construir candidatos válidos (`score >= 3` y guarda aprobada).
+2. Si no hay candidatos, retornar `unknown`.
+3. Calcular `maxScore`.
+4. Construir candidatos `top` donde `score === maxScore`.
+5. Si `top` tiene un candidato, seleccionarlo.
+6. Si `top` tiene múltiples candidatos, aplicar precedencia **solo dentro de `top`**.
+7. Si la precedencia produce un único ganador, seleccionarlo.
+8. Si sigue siendo ambiguo, retornar `unknown`.
 
-## Compatibilidad y regresión
+### Regla innegociable
+La precedencia es solo desempate sobre candidatos con puntuación máxima y **nunca anula una puntuación mayor**.
 
-- Objetivo de compatibilidad P0: fixtures existentes mantienen su `framework.type`.
-- La regresión se valida con una suite dedicada (`fixture -> framework.type`).
-- Monorepo no se modela como framework:
-- `framework.type` puede ser `unknown`
-- estado monorepo vive en `folderStructure.isMonorepo`
+## Política de Compatibilidad y Regresión
+- Los fixtures existentes deben mantener el mismo `framework.type`.
+- La regresión se aplica mediante tests dedicados de mapa de fixtures.
+- Monorepo no es un tipo de framework:
+- el framework permanece independiente (`framework.type` puede ser `unknown`)
+- el estado de monorepo vive en `folderStructure.isMonorepo`
 
-## Alcance de "sin falsos positivos"
+## Alcance de "Sin Falsos Positivos"
+- La garantía fuerte anti-FP aplica en P0 a:
+`angular`, `sveltekit`, `astro`, `nestjs`.
+- `react/vue/express/fastify` permanecen como compat-legacy y pueden clasificar proyectos tipo librería solo desde dependencias.
 
-En P0, la garantía fuerte anti-FP aplica a frameworks nuevos:
+## Fixtures P0 + framework.type Esperado
 
-- `angular`
-- `sveltekit`
-- `astro`
-- `nestjs`
-
-`react/vue/express/fastify` quedan en `legacy-compat`; pueden clasificar proyectos library-like por dependencias.
-
-## Fixtures P0 y resultados esperados
-
-| Fixture | Resultado esperado |
+| Fixture | Esperado |
 |---|---|
 | `angular-simple` | `angular` |
 | `angular-ambiguous` | `unknown` |
@@ -115,17 +126,81 @@ En P0, la garantía fuerte anti-FP aplica a frameworks nuevos:
 | `nest-ambig` | `unknown` |
 | `precedence-next-react` | `next` |
 | `precedence-nuxt-vue` | `nuxt` |
-| `react-library-like` | `react` (legacy-compat) |
+| `react-library-like` | `react` (compat-legacy) |
 
-## Plan P0/P1
+## P0 - Issues + DoD (Cerrado)
 
-### P0 (este cambio)
-- Implementar matriz de señales con scoring.
-- Agregar guardas anti-FP para frameworks nuevos.
-- Añadir fixtures/tests de simple/ambiguous/precedence/regresión.
-- Mantener fallback de render a `base.mustache` para frameworks nuevos.
+### P0-1: Extender tipos de framework
+- Alcance: agregar `sveltekit`, `astro`, `nestjs` a la unión de tipos de framework.
+- Archivos: `src/types.ts`.
+- DoD:
+- Typecheck y tests pasan.
+- Sin cambio de tipo en fixtures existentes.
 
-### P1 (siguiente etapa)
-- Evaluar guardas de app-likeness para legacy (`react/vue/express/fastify`) si no rompe compatibilidad.
-- Evaluar incorporación de `redwood`.
-- Ajustar thresholds solo con evidencia de tests de regresión.
+### P0-2: API compatible con rootPath para el detector
+- Alcance: aceptar `rootPathOrOptions` manteniendo compatibilidad de API.
+- Archivos: `src/detect/framework-detector.ts`, `src/detect/index.ts`.
+- DoD:
+- `detectProject()` pasa `rootPath`.
+- Tests unitarios cubren formas string y objeto de rootPath.
+
+### P0-3: Motor de puntuación + guardas + prioridad en precisión
+- Alcance: señales basadas en matriz, piso de puntuación, umbrales de confianza, guardas anti-FP.
+- Archivos: `src/detect/framework-detector.ts`.
+- DoD:
+- Tests de frameworks nuevos simple/ambiguo pasan.
+- Se retorna unknown cuando piso/guardas fallan.
+
+### P0-4: Manejo de precedencia y ambigüedad
+- Alcance: reglas de precedencia y unknown en ambigüedad no resuelta.
+- Archivos: `src/detect/framework-detector.ts`, tests del detector.
+- DoD:
+- Tests de precedencia por desempate pasan.
+- Empate no resoluble retorna `unknown`.
+
+### P0-5: Fixtures y endurecimiento de regresión
+- Alcance: agregar fixtures P0 + mapa de regresión para fixtures antiguos.
+- Archivos:
+- `tests/fixtures/*` (nuevos fixtures P0)
+- `tests/detect/framework-regression.test.ts`
+- `tests/detect/project-detector.test.ts`
+- DoD:
+- Fixtures existentes mantienen `framework.type` esperado.
+- Expectativas de nuevos fixtures pasan.
+
+### P0-6: Fallback seguro en renderizado
+- Alcance: verificar que los nuevos tipos de framework no rompen el renderizado y hacen fallback al template base.
+- Archivos: `tests/render/template-selection.test.ts`.
+- DoD:
+- `angular/sveltekit/astro/nestjs` resuelven a `base.mustache`.
+- El comportamiento de templates existentes permanece estable.
+
+### Comandos de verificación P0
+- `npm run build`
+- `npm test`
+- `node dist/cli.js init tests/fixtures/react-vite --dry-run --profile compact`
+- `node dist/cli.js init tests/fixtures/angular-simple --dry-run --profile compact`
+- `node dist/cli.js init tests/fixtures/sveltekit-simple --dry-run --profile compact`
+- `node dist/cli.js init tests/fixtures/astro-simple --dry-run --profile compact`
+- `node dist/cli.js init tests/fixtures/nest-simple --dry-run --profile compact`
+- `npm run benchmark:lite -- --json-only`
+- `npm run benchmark:limits -- --json-only`
+- `npm run benchmark:p1`
+
+## P1 - Backlog (Referencia)
+
+### P1-1: Evaluación de app-likeness legacy
+- Objetivo: evaluar guardas opcionales para `react/vue/express/fastify` sin romper compatibilidad.
+- DoD: propuesta + evidencia de tests segura contra regresión.
+
+### P1-2: Evaluación de Redwood
+- Objetivo: evaluar viabilidad de detección de `redwood` e impacto en compatibilidad.
+- DoD: memo de decisión + plan de implementación P1 opcional.
+
+### P1-3: Ajuste de umbrales con evidencia
+- Objetivo: revisar pesos/umbrales solo si se justifica por evidencia de regresión y benchmarks.
+- DoD: informe de impacto en benchmarks y fixtures.
+
+### P1-4: Fixtures adicionales de ambigüedad
+- Objetivo: expandir cobertura de fixtures de empate y casi-empate para estabilidad a largo plazo del detector.
+- DoD: nuevos fixtures + suite de regresión verde.

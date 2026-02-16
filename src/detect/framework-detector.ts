@@ -245,29 +245,33 @@ export function detectFramework(
     };
   }
 
-  const precedenceFilteredTypes = filterByPrecedence(
-    candidates.map(candidate => candidate.type)
-  );
-  const precedenceFilteredCandidates = candidates.filter(candidate =>
-    precedenceFilteredTypes.includes(candidate.type)
-  );
-  const resolvedCandidates =
-    precedenceFilteredCandidates.length > 0 ? precedenceFilteredCandidates : candidates;
+  const maxScore = Math.max(...candidates.map(candidate => candidate.score));
+  const topCandidates = candidates.filter(candidate => candidate.score === maxScore);
+  let winner: ScoredFramework | undefined;
 
-  const maxScore = Math.max(...resolvedCandidates.map(candidate => candidate.score));
-  const topCandidates = resolvedCandidates.filter(candidate => candidate.score === maxScore);
-  let winner: ScoredFramework | undefined = topCandidates[0];
+  if (topCandidates.length === 1) {
+    winner = topCandidates[0];
+  } else {
+    const precedenceFilteredTypes = filterByPrecedence(
+      topCandidates.map(candidate => candidate.type)
+    );
+    const precedenceWinners = topCandidates.filter(candidate =>
+      precedenceFilteredTypes.includes(candidate.type)
+    );
 
-  if (topCandidates.length > 1) {
-    return {
-      type: 'unknown',
-      confidence: 'low',
-      indicators: [
-        `Ambiguous framework signals without precedence winner: ${topCandidates
-          .map(candidate => candidate.type)
-          .join(', ')}`,
-      ],
-    };
+    if (precedenceWinners.length === 1) {
+      winner = precedenceWinners[0];
+    } else {
+      return {
+        type: 'unknown',
+        confidence: 'low',
+        indicators: [
+          `Ambiguous framework signals without precedence winner: ${topCandidates
+            .map(candidate => candidate.type)
+            .join(', ')}`,
+        ],
+      };
+    }
   }
 
   if (!winner) {

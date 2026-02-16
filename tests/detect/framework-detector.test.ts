@@ -32,7 +32,25 @@ describe('detectFramework', () => {
     expect(framework.version).toBe('^18.3.0');
   });
 
-  it('should detect Next.js over React', () => {
+  it('should apply precedence next > react when scores are tied', () => {
+    const packageInfo: PackageInfo = {
+      name: 'test',
+      scripts: {},
+      dependencies: {
+        react: '^18.3.0',
+        'react-dom': '^18.3.0',
+        next: '^14.0.0',
+      },
+      devDependencies: {},
+    };
+
+    const framework = detectFramework(packageInfo, fixturePath('precedence-next-react'));
+
+    expect(framework.type).toBe('next');
+    expect(framework.confidence).toBe('high');
+  });
+
+  it('should not apply precedence when react has a higher score than next', () => {
     const packageInfo: PackageInfo = {
       name: 'test',
       scripts: {
@@ -48,7 +66,7 @@ describe('detectFramework', () => {
 
     const framework = detectFramework(packageInfo);
 
-    expect(framework.type).toBe('next');
+    expect(framework.type).toBe('react');
     expect(framework.confidence).toBe('high');
   });
 
@@ -339,24 +357,21 @@ describe('detectFramework', () => {
     expect(framework.confidence).toBe('medium');
   });
 
-  it('should prioritize Nuxt over Vue when both are present', () => {
+  it('should apply precedence nuxt > vue when scores are tied', () => {
     const packageInfo: PackageInfo = {
       name: 'test',
-      scripts: {
-        dev: 'nuxt dev',
-      },
+      scripts: {},
       dependencies: {
+        nuxt: '^3.12.0',
         vue: '^3.4.0',
       },
-      devDependencies: {
-        nuxt: '^3.12.0',
-      },
+      devDependencies: {},
     };
 
     const framework = detectFramework(packageInfo);
 
     expect(framework.type).toBe('nuxt');
-    expect(framework.confidence).toBe('high');
+    expect(framework.confidence).toBe('medium');
     expect(framework.version).toBe('^3.12.0');
   });
 
