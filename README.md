@@ -43,11 +43,11 @@ Nombres importantes para evitar confusion:
 Uso sin instalacion (recomendado):
 
 ```bash
-npx -p @sebasgc0399/agents-md agents-md init
-npx -p @sebasgc0399/agents-md agents-md init --dry-run
-npx -p @sebasgc0399/agents-md agents-md init --profile compact
-npx -p @sebasgc0399/agents-md agents-md init --profile standard
-npx -p @sebasgc0399/agents-md agents-md init --profile full
+npx @sebasgc0399/agents-md init
+npx @sebasgc0399/agents-md init --dry-run
+npx @sebasgc0399/agents-md init --profile compact
+npx @sebasgc0399/agents-md init --profile standard
+npx @sebasgc0399/agents-md init --profile full
 ```
 
 ## Instalacion
@@ -55,7 +55,7 @@ npx -p @sebasgc0399/agents-md agents-md init --profile full
 Opcion 1: sin instalacion (npx)
 
 ```bash
-npx -p @sebasgc0399/agents-md agents-md init
+npx @sebasgc0399/agents-md init
 ```
 
 Opcion 2: instalacion global
