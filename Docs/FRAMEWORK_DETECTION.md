@@ -193,9 +193,25 @@ La precedencia es solo desempate sobre candidatos con puntuación máxima y **nu
 - Objetivo: evaluar guardas opcionales para `react/vue/express/fastify` sin romper compatibilidad.
 - DoD: propuesta + evidencia de tests segura contra regresión.
 
-### P1-2: Evaluación de Redwood
-- Objetivo: evaluar viabilidad de detección de `redwood` e impacto en compatibilidad.
-- DoD: memo de decisión + plan de implementación P1 opcional.
+### P1-2: Evaluacion de Redwood (viability, sin implementacion)
+- Objetivo: evaluar viabilidad de deteccion de `redwood` e impacto en compatibilidad, sin tocar detector ni tipos.
+- Senales candidatas para un PR futuro:
+  - Strong: `redwood.toml`
+  - Strong: dep `@redwoodjs/core`
+  - Medium: script `rw dev`/`yarn rw dev`
+  - Medium: dirs `api/` y `web/`
+  - Guarda candidata: requerir `redwood.toml`
+  - Precedencia candidata: `redwood > react` solo tie-break
+- Evidencia observada (estado actual):
+  - `redwood-viability-simple` => `unknown`
+  - `redwood-viability-ambiguous` => `unknown`
+  - `redwood-viability-react-overlap` => `react`
+- Decision P1-2 (basada en evidencia): `GO` condicionado para PR futuro separado.
+- Condiciones del PR futuro:
+  - no drift en `framework-regression`,
+  - guarda fuerte anti-FP obligatoria,
+  - precedencia tie-break-only,
+  - fallback de render a `base.mustache`.
 
 ### P1-3: Ajuste de umbrales con evidencia
 - Objetivo: revisar pesos/umbrales solo si se justifica por evidencia de regresión y benchmarks.

@@ -1,3 +1,4 @@
+import fs from 'fs';
 import { describe, it, expect } from 'vitest';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -11,6 +12,11 @@ const fixturesDir = path.join(repoRoot, 'tests', 'fixtures');
 
 function fixturePath(name: string): string {
   return path.join(fixturesDir, name);
+}
+
+function fixturePackageInfo(name: string): PackageInfo {
+  const packageJsonPath = path.join(fixturePath(name), 'package.json');
+  return JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8')) as PackageInfo;
 }
 
 describe('detectFramework', () => {
@@ -415,6 +421,16 @@ describe('detectFramework', () => {
     } as PackageInfo;
 
     const framework = detectFramework(packageInfo);
+
+    expect(framework.type).toBe('unknown');
+    expect(framework.confidence).toBe('low');
+  });
+
+  it('documents current behavior for redwood-like fixture without redwood support', () => {
+    const framework = detectFramework(
+      fixturePackageInfo('redwood-viability-simple'),
+      fixturePath('redwood-viability-simple')
+    );
 
     expect(framework.type).toBe('unknown');
     expect(framework.confidence).toBe('low');
