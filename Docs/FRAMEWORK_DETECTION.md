@@ -14,12 +14,12 @@ Objetivos:
 
 ### Entradas permitidas
 - `package.json`:
-- `dependencies`
-- `devDependencies`
-- `scripts`
+  - `dependencies`
+  - `devDependencies`
+  - `scripts`
 - `existsSync` solo en rutas fijas:
-- archivos como `angular.json`, `svelte.config.js`, `astro.config.*`, `nest-cli.json`, `next.config.*`, `nuxt.config.*`, `firebase.json`
-- directorios como `pages/`, `functions/`
+  - archivos como `angular.json`, `svelte.config.js`, `astro.config.*`, `nest-cli.json`, `next.config.*`, `nuxt.config.*`, `firebase.json`
+  - directorios como `pages/`, `functions/`
 
 ### No permitido
 - Análisis profundo del contenido de archivos fuente/configuración.
@@ -54,8 +54,8 @@ Objetivos:
 
 ### Piso de clasificación (prioridad en precisión)
 - Un framework se clasifica solo si:
-- `score >= 3`
-- la guarda del framework pasa (si está definida)
+  - `score >= 3`
+  - la guarda del framework pasa (si está definida)
 - En caso contrario, el resultado es `unknown`.
 
 ### Contrato de salida de confianza
@@ -134,46 +134,46 @@ La precedencia es solo desempate sobre candidatos con puntuación máxima y **nu
 - Alcance: agregar `sveltekit`, `astro`, `nestjs` a la unión de tipos de framework.
 - Archivos: `src/types.ts`.
 - DoD:
-- Typecheck y tests pasan.
-- Sin cambio de tipo en fixtures existentes.
+  - Typecheck y tests pasan.
+  - Sin cambio de tipo en fixtures existentes.
 
 ### P0-2: API compatible con rootPath para el detector
 - Alcance: aceptar `rootPathOrOptions` manteniendo compatibilidad de API.
 - Archivos: `src/detect/framework-detector.ts`, `src/detect/index.ts`.
 - DoD:
-- `detectProject()` pasa `rootPath`.
-- Tests unitarios cubren formas string y objeto de rootPath.
+  - `detectProject()` pasa `rootPath`.
+  - Tests unitarios cubren formas string y objeto de rootPath.
 
 ### P0-3: Motor de puntuación + guardas + prioridad en precisión
 - Alcance: señales basadas en matriz, piso de puntuación, umbrales de confianza, guardas anti-FP.
 - Archivos: `src/detect/framework-detector.ts`.
 - DoD:
-- Tests de frameworks nuevos simple/ambiguo pasan.
-- Se retorna unknown cuando piso/guardas fallan.
+  - Tests de frameworks nuevos simple/ambiguo pasan.
+  - Se retorna unknown cuando piso/guardas fallan.
 
 ### P0-4: Manejo de precedencia y ambigüedad
 - Alcance: reglas de precedencia y unknown en ambigüedad no resuelta.
 - Archivos: `src/detect/framework-detector.ts`, tests del detector.
 - DoD:
-- Tests de precedencia por desempate pasan.
-- Empate no resoluble retorna `unknown`.
+  - Tests de precedencia por desempate pasan.
+  - Empate no resoluble retorna `unknown`.
 
 ### P0-5: Fixtures y endurecimiento de regresión
 - Alcance: agregar fixtures P0 + mapa de regresión para fixtures antiguos.
 - Archivos:
-- `tests/fixtures/*` (nuevos fixtures P0)
-- `tests/detect/framework-regression.test.ts`
-- `tests/detect/project-detector.test.ts`
+  - `tests/fixtures/*` (nuevos fixtures P0)
+  - `tests/detect/framework-regression.test.ts`
+  - `tests/detect/project-detector.test.ts`
 - DoD:
-- Fixtures existentes mantienen `framework.type` esperado.
-- Expectativas de nuevos fixtures pasan.
+  - Fixtures existentes mantienen `framework.type` esperado.
+  - Expectativas de nuevos fixtures pasan.
 
 ### P0-6: Fallback seguro en renderizado
 - Alcance: verificar que los nuevos tipos de framework no rompen el renderizado y hacen fallback al template base.
 - Archivos: `tests/render/template-selection.test.ts`.
 - DoD:
-- `angular/sveltekit/astro/nestjs` resuelven a `base.mustache`.
-- El comportamiento de templates existentes permanece estable.
+  - `angular/sveltekit/astro/nestjs` resuelven a `base.mustache`.
+  - El comportamiento de templates existentes permanece estable.
 
 ### Comandos de verificación P0
 - `npm run build`
