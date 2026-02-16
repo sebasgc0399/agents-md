@@ -148,11 +148,35 @@ describe('detectProject', () => {
     expect(result.framework.type).toBe('next');
   });
 
+  it('applies precedence next > react in tie fixture', async () => {
+    const projectPath = path.join(fixturesDir, 'tie-next-react-equal-score');
+    const result = await detectProject(projectPath);
+
+    expect(result.framework.type).toBe('next');
+    expect(result.framework.confidence).toBe('high');
+  });
+
   it('applies precedence nuxt > vue in mixed fixture', async () => {
     const projectPath = path.join(fixturesDir, 'precedence-nuxt-vue');
     const result = await detectProject(projectPath);
 
     expect(result.framework.type).toBe('nuxt');
+  });
+
+  it('applies precedence nuxt > vue in tie fixture', async () => {
+    const projectPath = path.join(fixturesDir, 'tie-nuxt-vue-equal-score');
+    const result = await detectProject(projectPath);
+
+    expect(result.framework.type).toBe('nuxt');
+    expect(result.framework.confidence).toBe('medium');
+  });
+
+  it('returns unknown for unresolved cross-family tie fixture', async () => {
+    const projectPath = path.join(fixturesDir, 'unresolved-tie-cross-family');
+    const result = await detectProject(projectPath);
+
+    expect(result.framework.type).toBe('unknown');
+    expect(result.framework.confidence).toBe('low');
   });
 
   it('downgrades firebase framework when functions folder is missing', async () => {
@@ -273,46 +297,6 @@ describe('detectProject', () => {
 
     expect(result.framework.type).toBe('react');
     expect(result.framework.confidence).toBe('high');
-  });
-
-  it('applies tie-break precedence for tie-next-react-equal-score fixture', async () => {
-    const projectPath = path.join(fixturesDir, 'tie-next-react-equal-score');
-    const result = await detectProject(projectPath);
-
-    expect(result.framework.type).toBe('next');
-    expect(result.framework.confidence).toBe('high');
-  });
-
-  it('keeps higher-score framework for near-tie-next-react-react-higher fixture', async () => {
-    const projectPath = path.join(fixturesDir, 'near-tie-next-react-react-higher');
-    const result = await detectProject(projectPath);
-
-    expect(result.framework.type).toBe('react');
-    expect(result.framework.confidence).toBe('high');
-  });
-
-  it('applies tie-break precedence for tie-nuxt-vue-equal-score fixture', async () => {
-    const projectPath = path.join(fixturesDir, 'tie-nuxt-vue-equal-score');
-    const result = await detectProject(projectPath);
-
-    expect(result.framework.type).toBe('nuxt');
-    expect(result.framework.confidence).toBe('medium');
-  });
-
-  it('keeps higher-score framework for near-tie-nuxt-vue-vue-higher fixture', async () => {
-    const projectPath = path.join(fixturesDir, 'near-tie-nuxt-vue-vue-higher');
-    const result = await detectProject(projectPath);
-
-    expect(result.framework.type).toBe('vue');
-    expect(result.framework.confidence).toBe('high');
-  });
-
-  it('returns unknown for unresolved tie cross-family fixture', async () => {
-    const projectPath = path.join(fixturesDir, 'unresolved-tie-cross-family');
-    const result = await detectProject(projectPath);
-
-    expect(result.framework.type).toBe('unknown');
-    expect(result.framework.confidence).toBe('low');
   });
 
   it('detects monorepo from turbo dependency plus packages folder hint', async () => {

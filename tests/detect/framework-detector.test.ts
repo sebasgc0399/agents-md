@@ -56,12 +56,47 @@ describe('detectFramework', () => {
     expect(framework.confidence).toBe('high');
   });
 
+  it('should resolve synthetic next/react tie to next', () => {
+    const packageInfo: PackageInfo = {
+      name: 'synthetic-tie-next-react',
+      scripts: {},
+      dependencies: {
+        react: '^18.3.0',
+        next: '^14.0.0',
+      },
+      devDependencies: {},
+    };
+
+    const framework = detectFramework(packageInfo);
+
+    expect(framework.type).toBe('next');
+    expect(framework.confidence).toBe('medium');
+  });
+
   it('should not apply precedence when react has a higher score than next', () => {
     const packageInfo: PackageInfo = {
       name: 'test',
       scripts: {
         dev: 'next dev',
       },
+      dependencies: {
+        react: '^18.3.0',
+        'react-dom': '^18.3.0',
+        next: '^14.0.0',
+      },
+      devDependencies: {},
+    };
+
+    const framework = detectFramework(packageInfo);
+
+    expect(framework.type).toBe('react');
+    expect(framework.confidence).toBe('high');
+  });
+
+  it('should keep react as winner in synthetic near-tie with higher score', () => {
+    const packageInfo: PackageInfo = {
+      name: 'synthetic-near-tie-next-react',
+      scripts: {},
       dependencies: {
         react: '^18.3.0',
         'react-dom': '^18.3.0',
@@ -295,6 +330,45 @@ describe('detectFramework', () => {
     expect(framework.confidence).toBe('low');
   });
 
+  it('should return unknown for sveltekit in package-only mode without rootPath', () => {
+    const packageInfo: PackageInfo = {
+      name: 'sveltekit-package-only',
+      scripts: {
+        dev: 'svelte-kit dev',
+      },
+      dependencies: {
+        '@sveltejs/kit': '^2.0.0',
+        svelte: '^5.0.0',
+      },
+      devDependencies: {},
+    };
+
+    const framework = detectFramework(packageInfo);
+
+    expect(framework.type).toBe('unknown');
+    expect(framework.confidence).toBe('low');
+  });
+
+  it('should return unknown for nestjs in package-only mode without rootPath', () => {
+    const packageInfo: PackageInfo = {
+      name: 'nestjs-package-only',
+      scripts: {
+        start: 'nest start',
+      },
+      dependencies: {
+        '@nestjs/core': '^10.0.0',
+        '@nestjs/common': '^10.0.0',
+        '@nestjs/cli': '^10.0.0',
+      },
+      devDependencies: {},
+    };
+
+    const framework = detectFramework(packageInfo);
+
+    expect(framework.type).toBe('unknown');
+    expect(framework.confidence).toBe('low');
+  });
+
   it('should detect Firebase Functions from devDependencies', () => {
     const packageInfo: PackageInfo = {
       name: 'test',
@@ -381,6 +455,24 @@ describe('detectFramework', () => {
     expect(framework.version).toBe('^3.12.0');
   });
 
+  it('should keep vue as winner in synthetic near-tie with higher score', () => {
+    const packageInfo: PackageInfo = {
+      name: 'synthetic-near-tie-nuxt-vue',
+      scripts: {},
+      dependencies: {
+        nuxt: '^3.12.0',
+        vue: '^3.4.0',
+        '@vue/cli-service': '^5.0.8',
+      },
+      devDependencies: {},
+    };
+
+    const framework = detectFramework(packageInfo);
+
+    expect(framework.type).toBe('vue');
+    expect(framework.confidence).toBe('high');
+  });
+
   it('should return unknown for unresolved tie without precedence rule', () => {
     const packageInfo: PackageInfo = {
       name: 'test',
@@ -461,70 +553,6 @@ describe('detectFramework', () => {
       fixturePackageInfo('redwood-viability-simple'),
       fixturePath('redwood-viability-simple')
     );
-
-    expect(framework.type).toBe('unknown');
-    expect(framework.confidence).toBe('low');
-  });
-
-  it('resolves tie-next-react fixture to next', () => {
-    const framework = detectFramework(
-      fixturePackageInfo('tie-next-react-equal-score'),
-      fixturePath('tie-next-react-equal-score')
-    );
-
-    expect(framework.type).toBe('next');
-    expect(framework.confidence).toBe('high');
-  });
-
-  it('keeps near-tie next-react fixture on higher-score react', () => {
-    const framework = detectFramework(
-      fixturePackageInfo('near-tie-next-react-react-higher'),
-      fixturePath('near-tie-next-react-react-higher')
-    );
-
-    expect(framework.type).toBe('react');
-    expect(framework.confidence).toBe('high');
-  });
-
-  it('resolves tie-nuxt-vue fixture to nuxt', () => {
-    const framework = detectFramework(
-      fixturePackageInfo('tie-nuxt-vue-equal-score'),
-      fixturePath('tie-nuxt-vue-equal-score')
-    );
-
-    expect(framework.type).toBe('nuxt');
-    expect(framework.confidence).toBe('medium');
-  });
-
-  it('keeps near-tie nuxt-vue fixture on higher-score vue', () => {
-    const framework = detectFramework(
-      fixturePackageInfo('near-tie-nuxt-vue-vue-higher'),
-      fixturePath('near-tie-nuxt-vue-vue-higher')
-    );
-
-    expect(framework.type).toBe('vue');
-    expect(framework.confidence).toBe('high');
-  });
-
-  it('returns unknown for unresolved cross-family tie fixture', () => {
-    const framework = detectFramework(
-      fixturePackageInfo('unresolved-tie-cross-family'),
-      fixturePath('unresolved-tie-cross-family')
-    );
-
-    expect(framework.type).toBe('unknown');
-    expect(framework.confidence).toBe('low');
-  });
-
-  it('returns unknown for sveltekit fixture without rootPath in conservative mode', () => {
-    const framework = detectFramework(fixturePackageInfo('sveltekit-simple'));
-
-    expect(framework.type).toBe('unknown');
-    expect(framework.confidence).toBe('low');
-  });
-
-  it('returns unknown for nest fixture without rootPath in conservative mode', () => {
-    const framework = detectFramework(fixturePackageInfo('nest-simple'));
 
     expect(framework.type).toBe('unknown');
     expect(framework.confidence).toBe('low');
