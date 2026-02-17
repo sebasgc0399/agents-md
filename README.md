@@ -149,14 +149,19 @@ Cómo se interpretan estos límites:
 | `react.mustache` | `react`, `next` |
 | `vue.mustache` | `vue`, `nuxt` |
 | `angular.mustache` | `angular` |
+| `svelte.mustache` | `svelte`, `sveltekit` |
+| `nestjs.mustache` | `nestjs` |
+| `astro.mustache` | `astro` |
+| `fastify.mustache` | `fastify` |
 | `firebase.mustache` | `firebase-functions` |
 | `monorepo.mustache` | cualquier monorepo |
-| `base.mustache` | `sveltekit`, `svelte`, `astro`, `nestjs`, `express`, `fastify`, proyectos Node.js genéricos y casos `unknown` |
+| `base.mustache` | `express`, proyectos Node.js genericos y casos `unknown` |
 
 Notas importantes:
 
 - Si se detecta monorepo, `monorepo.mustache` tiene prioridad sobre cualquier framework.
-- Actualmente no hay plantilla dedicada para `sveltekit`, `svelte`, `astro`, `nestjs`, `express` y `fastify`; esos casos usan `base.mustache`.
+- `express` usa `base.mustache` por ser un framework intencionalmente no-opinado.
+- Las plantillas compartidas usan bloques condicionales internos: `svelte.mustache` incluye secciones especificas de SvelteKit y `vue.mustache` incluye secciones especificas de Nuxt.
 
 ## Cómo funciona
 
@@ -171,12 +176,12 @@ Notas importantes:
 
 ## Releases y novedades
 
-Cambios en la versión actual (v0.3.0 - 2026-02-16):
+Cambios en la versión actual (v0.4.0 - 2026-02-17):
 
-- Nuevas plantillas específicas por framework: Angular, Vue, Nuxt, Svelte, Astro, NestJS, Express y Fastify.
-- Detección de frameworks mejorada con reglas de precedencia (incluye Next.js y Nuxt) y mejor puntaje de clasificación.
-- Calidad reforzada con validaciones defensivas y más cobertura de pruebas en detección, runtime y utilidades de archivos.
-- Benchmarks de perfiles refinados: límites y umbrales actualizados, scripts unificados con constantes compartidas y runbook operativo P2.
+- Se agregó y actualizó la sección de estado de plantillas en README con el mapeo real por framework.
+- Se amplió el soporte de frameworks y templates dedicados, con mejoras de detección y precedencia (incluyendo Next.js y Nuxt).
+- Se reforzó la calidad técnica con más cobertura de pruebas en detección/runtime/fs y mejoras en benchmarks de perfiles.
+- Correcciones de documentación y notas de release para mayor claridad y consistencia.
 
 Actualizar a la última versión global:
 
