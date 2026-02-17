@@ -1,0 +1,246 @@
+# AGENTS.md
+
+## Proposito del repositorio
+{{project_description}}
+
+## Stack tecnologico
+{{#stacks}}
+- {{.}}
+{{/stacks}}
+
+## Comandos canonicos
+- Instalar dependencias: `{{commands.install}}`
+{{#has_dev}}
+- Ejecutar en local: `{{commands.dev}}`
+{{/has_dev}}
+{{#has_build}}
+- Compilar: `{{commands.build}}`
+{{/has_build}}
+{{#has_lint}}
+- Lint: `{{commands.lint}}`
+{{/has_lint}}
+{{#has_format}}
+- Formato: `{{commands.format}}`
+{{/has_format}}
+{{#has_tests}}
+- Pruebas: `{{commands.test}}`
+{{/has_tests}}
+
+## Definicion de terminado
+Antes de considerar una tarea completa:
+{{#has_tests}}
+- [ ] `{{commands.test}}` pasa sin errores
+{{/has_tests}}
+{{#has_lint}}
+- [ ] `{{commands.lint}}` pasa sin errores
+{{/has_lint}}
+- [ ] No anadir dependencias nuevas sin confirmacion
+- [ ] Sin advertencias de Svelte en consola
+- [ ] TypeScript strict sin errores
+
+## Estilo y convenciones
+{{style_notes}}
+
+### Estructura de componentes
+- Orden en archivos `.svelte`: `<script>` → markup → `<style>`
+- Un componente por archivo, nombrado en PascalCase
+- Props con `$props()`, eventos con callbacks o `createEventDispatcher`
+
+### Reactividad y estado
+- `$state()` para estado local reactivo
+- `$derived()` para valores calculados
+- `$effect()` solo para side effects (no para derivar estado)
+- Stores `writable()`/`derived()` en `src/lib/stores/` para estado compartido
+
+{{#is_sveltekit}}
+### Convenciones SvelteKit
+- Rutas basadas en archivos: `src/routes/`
+- Archivos de ruta: `+page.svelte`, `+layout.svelte`, `+page.server.ts`, `+server.ts`
+- Codigo compartido en `src/lib/` (alias `$lib`)
+- Data fetching con funciones `load()` en `+page.ts` o `+page.server.ts`
+- Form actions para mutations del servidor
+
+{{/is_sveltekit}}
+{{#has_tests}}
+## Guia de pruebas
+{{testing_notes}}
+
+### Cobertura esperada
+- Componentes: interacciones de usuario, renderizado condicional
+- Stores: suscripciones y actualizaciones de estado
+{{#is_sveltekit}}
+- Load functions: respuestas y manejo de errores
+{{/is_sveltekit}}
+{{/has_tests}}
+
+{{#isStandardOrFull}}
+## Como trabajar con agentes de IA
+
+### Formato de tareas
+- Comienza con una declaracion corta de alcance y resultado esperado.
+- Nombra los archivos objetivo antes de implementar.
+- Incluye restricciones (sin deps extra, mantener ESM, salida deterministica).
+- Pide criterios de aceptacion en terminos comprobables.
+
+### Solicitud de diffs y validacion
+- Solicita resumen por archivo y motivo por archivo.
+- Pide comandos exactos usados para validar.
+- Pide totales de pruebas (archivos/pruebas aprobadas).
+- Pide mencion explicita de compensaciones.
+
+### Lista de entrega Svelte
+- Manten contratos de componentes estables salvo que el alcance exija cambio.
+- Confirma que el orden de runes ($state, $derived, $effect) sea correcto.
+- Valida que la reactividad sea deterministica.
+- No mutar stores directamente fuera de su API (set/update).
+- No usar $effect() para derivar estado (usar $derived en su lugar).
+
+## Definicion de terminado ampliada
+- [ ] Alcance funcional completo con diff minimo.
+- [ ] No se introducen advertencias de Svelte en salida dev/test.
+- [ ] Componentes compartidos mantienen compatibilidad hacia atras.
+- [ ] El contenido generado de AGENTS no tiene marcadores.
+- [ ] Docs y pruebas reflejan cambios de comportamiento.
+
+## Lista de depuracion
+- Reproduce el problema con el fixture mas pequeno.
+- Verifica primero comandos canonicos (`dev`, `build`, `test`, `lint`).
+- Revisa manejo de rutas y neutralidad de plataforma.
+- Valida markdown generado para secciones obligatorias.
+- Reejecuta pruebas enfocadas antes de la suite completa.
+
+## Estrategia de pruebas
+- Prioriza pruebas unitarias para logica de render y validacion.
+- Manten pruebas e2e enfocadas en un flujo CLI deterministico.
+- Aserta lineas clave, no snapshots completos.
+{{#has_tests}}
+- Manten ejemplos de comandos alineados con `{{commands.test}}`.
+{{/has_tests}}
+
+## Haz / No hagas
+### Haz
+- Manten componentes legibles y de alcance acotado.
+- Prefiere condiciones explicitas en templates.
+- Reporta cambios de comportamiento con ejemplos concretos.
+- Preserva el comportamiento del perfil por defecto.
+
+### No hagas
+- No acoples pruebas a formatos de ruta especificos del OS.
+- No introduzcas efectos secundarios ocultos en renderizadores.
+- No uses marcadores como fallback de runtime en la salida final.
+- No expandas el alcance mas alla del comportamiento de perfil solicitado.
+
+## Plantilla de handoff del agente
+### Campos obligatorios
+- Objetivo: una frase que describa el estado final esperado.
+- Alcance: archivos o carpetas exactas que pueden cambiar.
+- Restricciones: lo que no debe cambiar.
+- Validacion: comandos que prueban el cambio.
+- Riesgos: incertidumbre conocida o items de seguimiento.
+
+### Formato de actualizacion de estado
+- Completado: items concretos finalizados.
+- En progreso: paso activo actual.
+- Siguiente: accion inmediata.
+- Bloqueos: informacion faltante o dependencia externa.
+
+### Lista de revision
+- [ ] El diff por archivo es facil de seguir.
+- [ ] Las pruebas cubren el comportamiento cambiado.
+- [ ] La salida se mantiene deterministica.
+- [ ] No hay cambios de comportamiento ocultos.
+- [ ] El manejo de errores es explicito.
+- [ ] La documentacion refleja el nuevo comportamiento.
+
+### Reglas de escalamiento
+- Escala cuando los requisitos entran en conflicto.
+- Escala antes de agregar dependencias.
+- Escala antes de tocar modulos no relacionados.
+- Escala ante implicaciones de seguridad ambiguas.
+{{/isStandardOrFull}}
+
+{{#isFull}}
+## Protocolo avanzado para agentes
+
+### Profundidad de revision por riesgo
+- Bajo: cambios solo de redaccion/disposicion en templates.
+- Medio: contenido condicionado por perfil y umbrales de validador.
+- Alto: parseo de opciones CLI y escritura de archivos de salida.
+- Exige pruebas de regresion enfocadas para cambios medio/alto.
+
+### Lista de handoff para PR
+- Incluye ejemplos de salida antes/despues para cada perfil.
+- Incluye comandos exactos ejecutados localmente.
+- Incluye declaracion de compatibilidad para `compact` por defecto.
+- Incluye notas de riesgo residual.
+
+### Flujo rapido de respuesta a incidentes
+1. Reproduce con fixture y flag de perfil explicito.
+2. Verifica salida de deteccion antes de renderizar template.
+3. Confirma que el validador coincide con limites del perfil seleccionado.
+4. Aplica patch con diff minimo y agrega cobertura.
+
+### Notas de endurecimiento de CI
+- Evita ejecucion de comandos dependientes de shell en pruebas.
+- Usa `process.execPath` y arreglos de argumentos.
+- Usa `path.join`/`path.resolve` de forma consistente.
+- Manten pruebas deterministicas y rapidas.
+
+### Matriz de verificacion
+| Capa | Verificacion | Evidencia |
+|---|---|---|
+| CLI | Parseo de argumentos | salida del comando |
+| Deteccion | scripts/framework | resultado del fixture |
+| Renderizado | secciones por perfil | vista previa markdown |
+| Validacion | limites/marcadores | pruebas unitarias |
+| E2E | comando dry-run | pruebas ok |
+
+### Guia de rollback
+1. Revierte primero bloques de template especificos por perfil.
+2. Manten soporte de parser solo si es compatible hacia atras.
+3. Reejecuta pruebas de perfil compact y e2e.
+4. Reintroduce cambios en porciones mas pequenas.
+
+### Protocolo de comunicacion
+- Resume supuestos antes de codificar.
+- Reporta archivos cambiados inmediatamente despues de cada edicion.
+- Reporta comandos ejecutados y resultados.
+- Reporta riesgos no resueltos antes del handoff.
+
+### Auditoria post-merge
+- Verifica que los ejemplos del README sigan funcionando como estan documentados.
+- Verifica que SPEC y comportamiento sigan alineados.
+- Verifica CI verde en al menos un runner de Windows.
+- Verifica que la salida compact por defecto permanezca igual.
+- Verifica que standard/full se mantengan dentro de limites configurados.
+
+### Plantilla minima de reporte de falla
+- Comando: comando exacto que falla
+- Esperado: que deberia pasar
+- Real: que paso
+- Capa sospechosa: detect/render/validate/cli
+- Fixture de reproduccion: ruta usada
+
+### Puerta final de liberacion
+- Confirma que los limites por perfil pasen el validador.
+- Confirma que las validaciones de marcadores sigan estrictas.
+- Confirma que la salida compact por defecto no cambie.
+- Confirma que las docs coincidan con los flags implementados.
+- Confirma suite de pruebas en verde en modo CI.
+- Confirma que no haya archivos no relacionados modificados.
+- Confirma que el markdown generado siga iniciando con # AGENTS.
+- Confirma orden de perfiles full > standard > compact.
+{{/isFull}}
+
+## Seguridad
+{{security_notes}}
+
+### Especifico de Svelte
+- Sanitizar contenido antes de usar `{@html}` (riesgo XSS)
+- No exponer API keys en codigo cliente
+{{#is_sveltekit}}
+- Usar `src/hooks.server.ts` para logica sensible del servidor
+{{/is_sveltekit}}
+
+---
+*Generado por agents-md v{{generator_version}}*

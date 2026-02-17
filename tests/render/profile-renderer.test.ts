@@ -141,6 +141,90 @@ describe('renderAgentsMd profiles', () => {
     expect(standardResult.content).not.toContain('Lista de entrega React');
   });
 
+  it('sveltekit fixture stays within profile limits', async () => {
+    const fixturePath = path.join(repoRoot, 'tests', 'fixtures', 'sveltekit-simple');
+    const detection = await detectProject(fixturePath);
+
+    const compactResult = renderAgentsMd(detection, 'compact');
+    const standardResult = renderAgentsMd(detection, 'standard');
+    const fullResult = renderAgentsMd(detection, 'full');
+
+    expect(compactResult.validation.lineCount).toBeLessThanOrEqual(MAX_LINES.compact);
+    expect(standardResult.validation.lineCount).toBeLessThanOrEqual(MAX_LINES.standard);
+    expect(standardResult.validation.lineCount).toBeGreaterThanOrEqual(MIN_LINES.standard);
+    expect(fullResult.validation.lineCount).toBeLessThanOrEqual(MAX_LINES.full);
+    expect(fullResult.validation.lineCount).toBeGreaterThanOrEqual(MIN_LINES.full);
+
+    expect(getLengthWarnings(compactResult.validation.warnings)).toEqual([]);
+    expect(getLengthWarnings(standardResult.validation.warnings)).toEqual([]);
+    expect(getLengthWarnings(fullResult.validation.warnings)).toEqual([]);
+
+    expect(standardResult.content).toContain('Lista de entrega Svelte');
+  });
+
+  it('nestjs fixture stays within profile limits', async () => {
+    const fixturePath = path.join(repoRoot, 'tests', 'fixtures', 'nest-simple');
+    const detection = await detectProject(fixturePath);
+
+    const compactResult = renderAgentsMd(detection, 'compact');
+    const standardResult = renderAgentsMd(detection, 'standard');
+    const fullResult = renderAgentsMd(detection, 'full');
+
+    expect(compactResult.validation.lineCount).toBeLessThanOrEqual(MAX_LINES.compact);
+    expect(standardResult.validation.lineCount).toBeLessThanOrEqual(MAX_LINES.standard);
+    expect(standardResult.validation.lineCount).toBeGreaterThanOrEqual(MIN_LINES.standard);
+    expect(fullResult.validation.lineCount).toBeLessThanOrEqual(MAX_LINES.full);
+    expect(fullResult.validation.lineCount).toBeGreaterThanOrEqual(MIN_LINES.full);
+
+    expect(getLengthWarnings(compactResult.validation.warnings)).toEqual([]);
+    expect(getLengthWarnings(standardResult.validation.warnings)).toEqual([]);
+    expect(getLengthWarnings(fullResult.validation.warnings)).toEqual([]);
+
+    expect(standardResult.content).toContain('Lista de entrega NestJS');
+  });
+
+  it('astro fixture stays within profile limits', async () => {
+    const fixturePath = path.join(repoRoot, 'tests', 'fixtures', 'astro-simple');
+    const detection = await detectProject(fixturePath);
+
+    const compactResult = renderAgentsMd(detection, 'compact');
+    const standardResult = renderAgentsMd(detection, 'standard');
+    const fullResult = renderAgentsMd(detection, 'full');
+
+    expect(compactResult.validation.lineCount).toBeLessThanOrEqual(MAX_LINES.compact);
+    expect(standardResult.validation.lineCount).toBeLessThanOrEqual(MAX_LINES.standard);
+    expect(standardResult.validation.lineCount).toBeGreaterThanOrEqual(MIN_LINES.standard);
+    expect(fullResult.validation.lineCount).toBeLessThanOrEqual(MAX_LINES.full);
+    expect(fullResult.validation.lineCount).toBeGreaterThanOrEqual(MIN_LINES.full);
+
+    expect(getLengthWarnings(compactResult.validation.warnings)).toEqual([]);
+    expect(getLengthWarnings(standardResult.validation.warnings)).toEqual([]);
+    expect(getLengthWarnings(fullResult.validation.warnings)).toEqual([]);
+
+    expect(standardResult.content).toContain('Lista de entrega Astro');
+  });
+
+  it('fastify fixture stays within profile limits', async () => {
+    const fixturePath = path.join(repoRoot, 'tests', 'fixtures', 'fastify-app-like-minimal');
+    const detection = await detectProject(fixturePath);
+
+    const compactResult = renderAgentsMd(detection, 'compact');
+    const standardResult = renderAgentsMd(detection, 'standard');
+    const fullResult = renderAgentsMd(detection, 'full');
+
+    expect(compactResult.validation.lineCount).toBeLessThanOrEqual(MAX_LINES.compact);
+    expect(standardResult.validation.lineCount).toBeLessThanOrEqual(MAX_LINES.standard);
+    expect(standardResult.validation.lineCount).toBeGreaterThanOrEqual(MIN_LINES.standard);
+    expect(fullResult.validation.lineCount).toBeLessThanOrEqual(MAX_LINES.full);
+    expect(fullResult.validation.lineCount).toBeGreaterThanOrEqual(MIN_LINES.full);
+
+    expect(getLengthWarnings(compactResult.validation.warnings)).toEqual([]);
+    expect(getLengthWarnings(standardResult.validation.warnings)).toEqual([]);
+    expect(getLengthWarnings(fullResult.validation.warnings)).toEqual([]);
+
+    expect(standardResult.content).toContain('Lista de entrega Fastify');
+  });
+
   it('angular fixture stays within profile limits', async () => {
     const fixturePath = path.join(repoRoot, 'tests', 'fixtures', 'angular-simple');
     const detection = await detectProject(fixturePath);

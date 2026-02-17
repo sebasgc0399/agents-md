@@ -67,6 +67,18 @@ const matrix: MatrixCase[] = [
     expectedMonorepo: false,
     requiredSpecificSections: [],
   },
+  {
+    fixture: 'astro-simple',
+    expectedFramework: 'astro',
+    expectedMonorepo: false,
+    requiredSpecificSections: [],
+  },
+  {
+    fixture: 'fastify-app-like-minimal',
+    expectedFramework: 'fastify',
+    expectedMonorepo: false,
+    requiredSpecificSections: [],
+  },
 ];
 
 function fixturePath(name: string): string {

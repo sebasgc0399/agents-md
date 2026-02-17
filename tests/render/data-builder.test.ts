@@ -492,6 +492,24 @@ describe('buildTemplateContext', () => {
     expect(context.is_nuxt).toBe(false);
   });
 
+  // --- is_sveltekit flag ---
+
+  it('sets is_sveltekit to true for sveltekit framework', () => {
+    const detection = createDetection({
+      framework: { type: 'sveltekit', confidence: 'high' },
+    });
+    const context = buildTemplateContext(detection, 'compact');
+    expect(context.is_sveltekit).toBe(true);
+  });
+
+  it('sets is_sveltekit to false for svelte framework', () => {
+    const detection = createDetection({
+      framework: { type: 'svelte', confidence: 'high' },
+    });
+    const context = buildTemplateContext(detection, 'compact');
+    expect(context.is_sveltekit).toBe(false);
+  });
+
   it('sets is_unknown_generic to true only for unknown non-monorepo projects', () => {
     const unknownSingle = createDetection({
       framework: { type: 'unknown', confidence: 'low' },

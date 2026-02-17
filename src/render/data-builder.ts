@@ -367,6 +367,7 @@ export function buildTemplateContext(
     isStandardOrFull: profile === 'standard' || profile === 'full',
     is_unknown_generic: framework.type === 'unknown' && !folderStructure.isMonorepo,
     is_nuxt: framework.type === 'nuxt',
+    is_sveltekit: framework.type === 'sveltekit',
     framework_type: framework.type,
     runtime_type: runtime.type,
   };
