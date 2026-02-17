@@ -128,12 +128,12 @@ La generacion solo se bloquea cuando hay errors de validacion.
 
 ## Releases y novedades
 
-Cambios en esta version actual:
+Cambios en esta version actual (v0.3.0 - 2026-02-16):
 
-- Benchmark de calidad P0/P1/P2 integrado (`benchmark:lite`, `benchmark:p1`, `benchmark:p2`)
-- Baseline reproducible de limites por perfil (`benchmark:limits`)
-- Gates de calidad en CI para benchmark lite + baseline semantico P1
-- Workflow semanal/manual de tendencias (`benchmark-trends`) con reporte JSON/Markdown
+- Nuevas plantillas especificas por framework: Angular, Vue, Nuxt, Svelte, Astro, NestJS, Express y Fastify.
+- Deteccion de frameworks mejorada con nuevas reglas de precedencia (incluyendo Next.js y Nuxt) y mejor scoring.
+- Calidad reforzada con guardas defensivas en validacion y ampliacion de cobertura de pruebas en deteccion/runtime/fs.
+- Benchmarks de perfiles refinados: limites y thresholds actualizados, scripts unificados con constantes compartidas y runbook operativo P2.
 
 Actualizar a la ultima version global:
 
