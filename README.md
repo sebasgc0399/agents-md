@@ -21,6 +21,7 @@ CLI para generar archivos `AGENTS.md` automáticamente para proyectos Node.js.
 - [Cómo funciona](#cómo-funciona)
 - [Releases y novedades](#releases-y-novedades)
 - [Desarrollo](#desarrollo)
+- [Dependency maintenance](#dependency-maintenance)
 - [Contribuciones](#contribuciones)
 - [Soporte](#soporte)
 - [Licencia](#licencia)
@@ -236,6 +237,20 @@ npm run benchmark:p2:deterministic
 # Smoke del CLI compilado
 node dist/cli.js init --dry-run
 ```
+
+### Dependency maintenance
+
+Policy and workflow:
+
+- `Docs/DEPENDENCY_UPDATES.md`
+- `Docs/SECURITY_TRACKING.md`
+
+Operational commands:
+
+- Runtime update: `npm run deps:update:runtime`
+- Runtime verification: `npm run deps:verify:runtime`
+- Dev update batch: `npm run deps:update:all`
+- Dev verification: `npm run deps:verify:dev`
 
 ### Runbook P2 (operación)
 
