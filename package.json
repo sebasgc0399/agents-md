@@ -40,6 +40,10 @@
     "test:coverage": "npm run build && vitest run --coverage",
     "test:watch": "vitest",
     "lint": "tsc --noEmit",
+    "deps:update:runtime": "npm update commander mustache",
+    "deps:update:all": "npm update",
+    "deps:verify:runtime": "npm audit --omit=dev --audit-level=high && npm run lint && npm test && npm pack --dry-run",
+    "deps:verify:dev": "npm audit --audit-level=high && npm run lint && npm test && npm run benchmark:lite",
     "prepublishOnly": "npm run build && npm test",
     "release": "release-it"
   },
