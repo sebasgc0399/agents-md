@@ -21,6 +21,14 @@ describe('validateOutput', () => {
     expect(result.lineCount).toBe(1);
   });
 
+  it('uses standard profile validation when profile is omitted', () => {
+    const content = '# AGENTS\n\nDeterministic validator sample content.';
+    const defaultResult = validateOutput(content);
+    const standardResult = validateOutput(content, 'standard');
+
+    expect(defaultResult).toEqual(standardResult);
+  });
+
   it('keeps valid=true when only soft-limit warnings exist', () => {
     const result = validateOutput('# AGENTS');
 

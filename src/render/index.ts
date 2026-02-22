@@ -12,7 +12,7 @@ import { validateOutput } from './validators.js';
  */
 export function renderAgentsMd(
   detection: DetectionResult,
-  profile: Profile = 'compact'
+  profile: Profile = 'standard'
 ): GenerationResult {
   // Build template context
   const context = buildTemplateContext(detection, profile);

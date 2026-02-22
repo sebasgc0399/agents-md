@@ -85,7 +85,7 @@ agents-md init
 # Vista previa sin escribir archivo
 agents-md init --dry-run
 
-# Elegir perfil de salida (default: compact)
+# Elegir perfil de salida (default: standard)
 agents-md init --profile compact
 agents-md init --profile standard
 agents-md init --profile full
@@ -112,8 +112,8 @@ Nota: las flags `-y/--yes` y `-i/--interactive` están reservadas y hoy no cambi
 
 ## Perfiles de salida
 
-- `compact` (default): salida breve y directa (objetivo aproximado: 30-90 líneas).
-- `standard`: salida intermedia para equipos (objetivo aproximado: 130-190 líneas).
+- `standard` (default): salida intermedia para equipos (objetivo aproximado: 130-190 líneas).
+- `compact`: salida breve y directa (objetivo aproximado: 30-90 líneas).
 - `full`: salida más detallada para traspaso técnico y CI (objetivo aproximado: 200-280 líneas).
 
 ## Límites de salida (límites suaves)

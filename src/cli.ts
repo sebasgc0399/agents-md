@@ -31,13 +31,13 @@ program
   .option('--dry-run', 'Preview without writing', false)
   .option('-y, --yes', 'Skip confirmations', false)
   .option('-i, --interactive', 'Interactive mode', false)
-  .option('--profile <profile>', 'Output profile: compact|standard|full', 'compact')
+  .option('--profile <profile>', 'Output profile: compact|standard|full', 'standard')
   .option('--verbose', 'Verbose output', false)
   .action(async (projectPath: string, options) => {
     const logger = new Logger(options.verbose);
 
     try {
-      const profile = String(options.profile || 'compact') as Profile;
+      const profile = String(options.profile || 'standard') as Profile;
       if (!VALID_PROFILES.includes(profile)) {
         logger.error(
           `Invalid profile "${profile}". Valid values: ${VALID_PROFILES.join(', ')}`

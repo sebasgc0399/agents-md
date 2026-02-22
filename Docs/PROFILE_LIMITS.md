@@ -134,8 +134,8 @@ Metricas reportadas:
 
 3. Compatibilidad:
 - no cambiar contrato CLI: `init`, `--profile`, `--dry-run`.
-- no cambiar semantica por defecto de `compact`.
-- el profile por defecto del CLI permanece `compact` (backward-compatible).
+- no cambiar semantica por defecto de `standard`.
+- el profile por defecto del CLI permanece `standard`.
 - mantener `ESM/NodeNext` y salida determinista.
 
 ## Backlog ejecutable (Issues P0/P1)

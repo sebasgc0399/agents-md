@@ -62,8 +62,8 @@ describe('renderAgentsMd profiles', () => {
     expect(standardLines).toBeGreaterThan(compactLines);
     expect(fullLines).toBeGreaterThan(standardLines);
 
-    // Backward compatibility: default profile should behave as compact.
-    expect(defaultResult.content).toBe(compactResult.content);
+    // Default profile should behave as standard.
+    expect(defaultResult.content).toBe(standardResult.content);
   });
 
   it('keeps unknown generic standard/full within length limits without length warnings', async () => {

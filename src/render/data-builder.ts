@@ -328,7 +328,7 @@ function buildStackList(
  */
 export function buildTemplateContext(
   detection: DetectionResult,
-  profile: Profile = 'compact'
+  profile: Profile = 'standard'
 ): TemplateContext {
   const { packageInfo, folderStructure, framework, runtime, commands } = detection;
 

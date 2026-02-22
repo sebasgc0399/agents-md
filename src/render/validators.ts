@@ -54,7 +54,7 @@ function getToleratedBounds(min: number, max: number, tolerancePct: number): {
  */
 export function validateOutput(
   content: string,
-  profile: Profile = 'compact'
+  profile: Profile = 'standard'
 ): ValidationResult {
   const normalized = content.replace(/\r\n/g, '\n');
   const normalizedForCount = normalized.replace(/\n+$/g, '');

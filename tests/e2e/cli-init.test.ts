@@ -100,6 +100,31 @@ describe('CLI init --dry-run', () => {
     expect(result.stdout).toContain('npm run dev');
   });
 
+  it('uses standard profile when --profile is omitted', () => {
+    const cliPath = path.join(repoRoot, 'dist', 'cli.js');
+    const fixturePath = path.join(repoRoot, 'tests', 'fixtures', 'react-vite');
+
+    const defaultResult = spawnSync(
+      process.execPath,
+      [cliPath, 'init', fixturePath, '--dry-run'],
+      {
+        encoding: 'utf-8',
+      }
+    );
+
+    const standardResult = spawnSync(
+      process.execPath,
+      [cliPath, 'init', fixturePath, '--dry-run', '--profile', 'standard'],
+      {
+        encoding: 'utf-8',
+      }
+    );
+
+    expect(defaultResult.status).toBe(0);
+    expect(standardResult.status).toBe(0);
+    expect(extractPreview(defaultResult.stdout)).toBe(extractPreview(standardResult.stdout));
+  });
+
   it('does not print length warnings for unknown fixture on standard/full profiles', () => {
     const cliPath = path.join(repoRoot, 'dist', 'cli.js');
     const fixturePath = path.join(repoRoot, 'tests', 'fixtures', 'runtime-npm');

@@ -58,7 +58,7 @@ agents-md init [path]
 | `--dry-run` | | Preview sin escribir archivo | `false` |
 | `--yes` | `-y` | Saltar confirmaciones | `false` |
 | `--interactive` | `-i` | Modo interactivo con prompts | `false` |
-| `--profile <profile>` | | Perfil de salida: compact \| standard \| full | `compact` |
+| `--profile <profile>` | | Perfil de salida: compact \| standard \| full | `standard` |
 | `--verbose` | | Mostrar detalles de detección | `false` |
 
 ### Ejemplos de Uso
